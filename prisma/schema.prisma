@@ -11,10 +11,10 @@ model Post {
   id           String   @id @default(uuid())
   title        String
   slug         String   @unique
+  thumbnail    String?   
   status       PostStatus
   content      Json
-  authorId     String
-  author       User     @relation(fields: [authorId], references: [id])
+  author       String
   publishedAt  DateTime?
   draftedAt    DateTime?
   updatedAt    DateTime @updatedAt
@@ -22,13 +22,6 @@ model Post {
   comments     Comment[]
 }
 
-model User {
-  id       String   @id @default(uuid())
-  name     String
-  email    String   @unique
-  role     Role     @default(author)
-  posts    Post[]
-}
 
 model Category {
   id      String         @id @default(uuid())

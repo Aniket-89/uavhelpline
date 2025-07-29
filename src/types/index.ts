@@ -4,14 +4,6 @@ export type PostStatus = "draft" | "published";
 // User roles
 export type UserRole = "admin" | "author";
 
-// Author/User
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-}
-
 // Category
 export interface Category {
   id: string;
@@ -24,10 +16,10 @@ export interface Post {
   id: string;
   title: string;
   slug: string;
+  thumbnail?: string;
   status: PostStatus;
   content: any; // Rich text format - can be Editor.js JSON, TipTap nodes, etc.
-  authorId: string;
-  author: User;
+  author: String;
   categories: Category[];
   publishedAt?: string; // ISO string
   draftedAt?: string;

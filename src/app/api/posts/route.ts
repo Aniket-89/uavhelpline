@@ -9,7 +9,6 @@ export async function GET() {
       categories: {
         include: { category: true },
       },
-      author: true,
     },
     orderBy: { publishedAt: "desc" },
   });
@@ -27,7 +26,7 @@ export async function POST(req: Request) {
   //   const user = await authUser(); // optional
   const body = await req.json();
 
-  const { title, slug, status, content, categoryIds } = body;
+  const { title, slug, status, content, author, categoryIds } = body;
 
   const newPost = await prisma.post.create({
     data: {
@@ -35,7 +34,7 @@ export async function POST(req: Request) {
       slug,
       status,
       content,
-      authorId: user.id,
+      author,
       categories: {
         create: categoryIds.map((id: string) => ({
           category: { connect: { id } },

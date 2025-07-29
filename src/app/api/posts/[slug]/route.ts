@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../../../../lib/db/index";
 
 export async function GET(
   _: Request,
@@ -11,7 +11,6 @@ export async function GET(
       categories: {
         include: { category: true },
       },
-      author: true,
     },
   });
 

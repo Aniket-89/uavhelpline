@@ -1,7 +1,5 @@
-"use server"
+import PostList from "@/components/dashboard/postList";
 
-import PostList from "@/components/postList";
-
-export default async function PageList() {
+export default function PageList() {
     return <PostList />
 }

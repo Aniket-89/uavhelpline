@@ -7,10 +7,10 @@ export default async function DashboardLayout({children,}: {children: React.Reac
     return (
         <SidebarProvider>
             <AppSidebar/>
-        <main>
+        <main className="w-full">
             <SidebarTrigger/>
 
-        {children}
+            {children}
         </main>
         </SidebarProvider>
     )

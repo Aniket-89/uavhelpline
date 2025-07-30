@@ -7,15 +7,40 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
+    const { name, slug } = body;
 
-  const { name, slug, posts } = body;
+    // Check if category with same name already exists
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        OR: [
+          { name: { equals: name, mode: 'insensitive' } },
+          { slug: slug }
+        ]
+      }
+    });
 
-  const newCategory = await prisma.category.create({
-    data:{
-      name,
-      slug,
+    if (existingCategory) {
+      return NextResponse.json(
+        { error: "Category with this name already exists" }, 
+        { status: 400 }
+      );
     }
-  })
-  return NextResponse.json(newCategory);
+
+    const newCategory = await prisma.category.create({
+      data: {
+        name,
+        slug,
+      }
+    });
+    
+    return NextResponse.json(newCategory);
+  } catch (error) {
+    console.error("Error creating category:", error);
+    return NextResponse.json(
+      { error: "Failed to create category" },
+      { status: 500 }
+    );
+  }
 }

@@ -19,7 +19,7 @@ export interface Post {
   thumbnail?: string;
   status: PostStatus;
   content: any; // Rich text format - can be Editor.js JSON, TipTap nodes, etc.
-  author: String;
+  author: string;
   categories: Category[];
   publishedAt?: string; // ISO string
   draftedAt?: string;

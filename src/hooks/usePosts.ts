@@ -34,3 +34,70 @@ export const useCreatePost = () => {
     },
   });
 };
+
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ slug, postData }: { slug: string; postData: Partial<Post> }) => {
+      const { data } = await axios.put(`/api/posts/${slug}`, postData);
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate all posts
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // Invalidate the specific post
+      queryClient.invalidateQueries({ queryKey: ["post", variables.slug] });
+      // If slug changed, also invalidate the new slug
+      if (data.slug !== variables.slug) {
+        queryClient.invalidateQueries({ queryKey: ["post", data.slug] });
+      }
+    },
+  });
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (slug: string) => {
+      const { data } = await axios.delete(`/api/posts/${slug}`);
+      return data;
+    },
+    onSuccess: (_, slug) => {
+      // Invalidate all posts
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // Remove the specific post from cache
+      queryClient.removeQueries({ queryKey: ["post", slug] });
+    },
+  });
+};
+
+export const useUpdatePostStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ slug, status }: { slug: string; status: "draft" | "published" }) => {
+      const { data } = await axios.put(`/api/posts/${slug}`, { status });
+      return data;
+    },
+    onSuccess: (_, variables) => {
+      // Invalidate all posts
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // Invalidate the specific post
+      queryClient.invalidateQueries({ queryKey: ["post", variables.slug] });
+    },
+  });
+};
+
+// Hook specifically for published posts (public view)
+export const usePublishedPosts = () => {
+  return useQuery<Post[]>({
+    queryKey: ["published-posts"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/posts");
+      // Filter only published posts for public view
+      return data.filter((post: Post) => post.status === "published");
+    },
+  });
+};

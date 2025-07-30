@@ -7,7 +7,7 @@ export const handleApiResponse = <T>(data: T, status = 200) => {
 
 export const handleApiError = (error: unknown) => {
   if (error instanceof ZodError) {
-    return NextResponse.json({ errors: error.errors }, { status: 400 });
+    return NextResponse.json({ errors: error.issues }, { status: 400 });
   }
 
   console.error(error);

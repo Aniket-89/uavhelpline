@@ -45,82 +45,595 @@
 
 :root {
   --radius: 0.625rem;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1400px;
+  
+  --font-headline: var(--font-libre-caslon-text);
+  --font-body: var(--font-playfair-display);
+  --font-serif: var(--font-archivo);
+
+  
+  --font-body: var(--font-playfair-display);
+  
+  /* Core UI Colors */
+  --background: rgb(247,242,242);  /* Dark teal background */
+  --foreground: rgb(50,31,31);
+  --card: oklch(0.97 0.01 240);  /* Very light teal background */
+  --card-foreground: oklch(0.20 0 0);  /* Dark gray text */
+  --popover: rgb(242,222,222);
+  --popover-foreground: oklch(0.15 0 0);
+  --primary: rgb(255,51,51);  /* Primary #133E87 */
+  --primary-foreground: oklch(0.98 0 0);  /* White text on primary */
+  --secondary: rgb(50,31,31);  /* Secondary #F3F3E0 cream */
+  --secondary-foreground: oklch(0.25 0 0);  /* Dark gray on cream */
+  --muted: rgb(238,231,231);  /* Light teal muted background */
+  --muted-foreground: oklch(0.50 0 0);  /* Medium gray text */
+  --accent: rgb(154,137,137);  /* Same as primary */
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.55 0.18 15);  /* Red for errors */
+  --border: rgba(50, 31, 31, 0.1607843137);  /* Light teal borders */
+  --input: oklch(0.96 0.01 240);  /* Very light teal inputs */
+  --ring: oklch(0.28 0.15 240);  /* Primary accent for focus */
+  
+  /* Chart colors with primary accent and cream */
+  --chart-1: oklch(0.28 0.15 240);  /* Primary */
+  --chart-2: oklch(0.95 0.02 85);   /* Secondary cream */
+  --chart-3: oklch(0.40 0.08 240);  /* Medium teal */
+  --chart-4: oklch(0.60 0.04 240);  /* Light teal */
+  --chart-5: oklch(0.35 0 0);       /* Gray accent */
   
   /* Sidebar colors */
-  --sidebar: oklch(0 0 0);
-  --sidebar-foreground: oklch(1 0 0);
-  --sidebar-primary: oklch(0.905 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --sidebar: oklch(0.92 0.02 240);  /* Light teal sidebar */
+  --sidebar-foreground: oklch(0.20 0 0);  /* Dark gray text */
+  --sidebar-primary: oklch(0.28 0.15 240);  /* Primary accent */
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.95 0.02 85);  /* Cream accent */
+  --sidebar-accent-foreground: oklch(0.25 0 0);
+  --sidebar-border: oklch(0.85 0.03 240);
+  --sidebar-ring: oklch(0.28 0.15 240);
+
+  /* Post Content Variables */
+  --post-content-bg: var(--background);  /* Very light teal */
+  --post-content-text: var(--foreground);  /* Dark gray text */
+  --post-content-heading: var(--foreground);  /* Very dark gray headings */
+  --post-content-muted: var(--muted-foreground);  /* Medium gray muted text */
+  --post-content-link: var(--primary);  /* Primary accent links */
+  --post-content-link-hover: var(--primary);  /* Darker on hover */
+  --post-content-code-bg: oklch(0.94 0.02 240);  /* Light teal code bg */
+  --post-content-code-text: oklch(0.25 0 0);  /* Dark gray code text */
+  --post-content-blockquote-bg: oklch(0.96 0.02 85);  /* Cream blockquote */
+  --post-content-blockquote-border: oklch(0.28 0.15 240);  /* Primary border */
+  --post-content-blockquote-text: oklch(0.25 0 0);  /* Dark gray text */
+  --post-content-table-border: oklch(0.85 0.02 240);  /* Light teal borders */
+  --post-content-table-header-bg: oklch(0.92 0.02 240);  /* Light teal header */
+  --post-content-highlight: var(--accent);  /* Light cream highlight */
+  --post-content-shadow: oklch(0.40 0 0 / 8%);  /* Gray shadows */
+  --post-content-image-shadow: oklch(0.30 0 0 / 12%);  /* Gray image shadows */
 
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-
-}
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
   }
+  
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  
+  ::-moz-selection {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-size: 18px;
+    font-weight: 400;  
+    font-family: var(--font-playfair-display);
+  }
+
+  h1, h2, h3, h5, h6 {
+    font-family: var(--font-libre-caslon-text);
+  }
+  h4 {
+    font-family: var(--font-archivo);
+  }
+
+
+  /* p, li, span, div {
+    font-family: var(--font-body);
+  } */
+  a {
+    font-family: var(--font-archivo);
+    font-weight: 500;
+  }
+
+  button {
+    font-family: var(--font-archivo);
   }
 }
+
+/* Post Content Styles */
+@layer components {
+  .post-content {
+    /* Base Styles */
+    background-color: var(--post-content-bg);
+    color: var(--post-content-text);
+    line-height: 1.7;
+    font-size: 1.1rem;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+  /* Typography Hierarchy */
+  .post-content h1,
+  .post-content h2,
+  .post-content h3,
+  .post-content h4,
+  .post-content h5,
+  .post-content h6 {
+    color: var(--post-content-heading);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    scroll-margin-top: 2rem;
+  }
+
+  .post-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    margin-top: 3rem;
+    border-bottom: 2px solid var(--post-content-table-border);
+    padding-bottom: 0.75rem;
+  }
+
+  .post-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    position: relative;
+  }
+
+  .post-content h2::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.5rem;
+    background: var(--post-content-link);
+    border-radius: 2px;
+  }
+
+  .post-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .post-content h4 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .post-content h5 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .post-content h6 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--post-content-muted);
+  }
+
+  /* Paragraphs */
+  .post-content p {
+    margin-bottom: 1rem;
+    text-align: justify;
+  }
+
+  .post-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Links */
+  .post-content a {
+    color: var(--post-content-link);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+
+  .post-content a:hover {
+    color: var(--post-content-link-hover);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 2px;
+  }
+
+  /* Images */
+  .post-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.125rem;
+    box-shadow: 0 10px 30px var(--post-content-image-shadow);
+    margin: 2rem 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .post-content img:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px var(--post-content-image-shadow);
+  }
+
+  /* Lists */
+  .post-content ul,
+  .post-content ol {
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+  }
+
+  .post-content ul, .post-content ol {
+    list-style: none;
+  }
+
+  .post-content ul li {
+    position: relative;
+    margin-bottom: 0.25rem;
+    padding-left: 0.5rem;
+  }
+
+  .post-content ul li::before {
+    content: '•';
+    position: absolute;
+    left: -0.5rem;
+    color: var(--post-content-link);
+    font-size: 1rem;
+    top: 0.2rem;
+  }
+
+  .post-content ol {
+    list-style: decimal;
+  }
+
+  .post-content ol li {
+    margin-bottom: 0.25rem;
+    padding-left: 0.5rem;
+  }
+
+  .post-content ol li::marker {
+    color: var(--post-content-link);
+    font-weight: 700;
+  }
+
+  /* Nested Lists */
+  .post-content li ul,
+  .post-content li ol {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Task Lists */
+  .post-content ul.task-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .post-content ul.task-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    padding-left: 0;
+  }
+
+  .post-content ul.task-list li::before {
+    display: none;
+  }
+
+  .post-content ul.task-list input[type="checkbox"] {
+    margin-top: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--post-content-link);
+    cursor: pointer;
+  }
+
+  /* Code */
+  .post-content code {
+    background-color: var(--post-content-code-bg);
+    color: var(--post-content-code-text);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, 'Courier New', monospace;
+    font-size: 0.9em;
+    font-weight: 500;
+    border: 1px solid var(--post-content-table-border);
+  }
+
+  .post-content pre {
+    background-color: var(--post-content-code-bg);
+    color: var(--post-content-code-text);
+    padding: 1.5rem;
+    border-radius: 0.375rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid var(--post-content-table-border);
+    box-shadow: 0 4px 12px var(--post-content-shadow);
+  }
+
+  .post-content pre code {
+    background: none;
+    padding: 0;
+    border: none;
+    color: inherit;
+  }
+
+  /* Blockquotes */
+  .post-content blockquote {
+    background-color: var(--post-content-blockquote-bg);
+    border-left: 4px solid var(--post-content-blockquote-border);
+    margin: 1rem 0;
+    padding: 1rem 1.5rem;
+    border-radius: 0.375rem;
+    color: var(--post-content-blockquote-text);
+    font-style: italic;
+    font-size: 1.1em;
+    position: relative;
+    box-shadow: 0 4px 12px var(--post-content-shadow);
+  }
+
+  .post-content blockquote::before {
+    content: '"';
+    position: absolute;
+    top: 0.5rem;
+    left: 1rem;
+    font-size: 3rem;
+    color: var(--post-content-blockquote-border);
+    opacity: 0.3;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+
+  .post-content blockquote p {
+    margin-bottom: 0;
+    padding-left: 2rem;
+  }
+
+  /* Tables */
+  .post-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--post-content-shadow);
+    border: 1px solid var(--post-content-table-border);
+  }
+
+  .post-content th,
+  .post-content td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--post-content-table-border);
+  }
+
+  .post-content th {
+    background-color: var(--post-content-table-header-bg);
+    font-weight: 700;
+    color: var(--post-content-heading);
+    border-bottom: 2px solid var(--post-content-table-border);
+  }
+
+  .post-content tr:hover {
+    background-color: var(--post-content-table-header-bg);
+    transition: background-color 0.2s ease;
+  }
+
+  .post-content tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Horizontal Rules */
+  .post-content hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--post-content-table-border),
+      transparent
+    );
+    margin: 1rem 0;
+  }
+
+  /* Highlights */
+  .post-content mark {
+    background-color: var(--post-content-highlight);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    color: var(--post-content-text);
+  }
+
+  /* Text Formatting */
+  .post-content strong {
+    font-weight: 700;
+    color: var(--post-content-heading);
+  }
+
+  .post-content em {
+    font-style: italic;
+    color: var(--post-content-text);
+  }
+
+  .post-content u {
+    text-decoration: underline;
+    text-decoration-color: var(--post-content-link);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+  }
+
+  .post-content s {
+    text-decoration: line-through;
+    text-decoration-color: var(--post-content-muted);
+    text-decoration-thickness: 2px;
+    opacity: 0.7;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .post-content {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .post-content h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .post-content h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .post-content h2::before {
+      left: -0.75rem;
+      width: 3px;
+      height: 1.25rem;
+    }
+
+    .post-content h3 {
+      font-size: 1.375rem;
+    }
+
+    .post-content img {
+      margin: 1rem 0;
+    }
+
+    .post-content pre {
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .post-content blockquote {
+      margin: 1rem 0;
+      padding: 1rem 1.5rem;
+    }
+
+    .post-content table {
+      font-size: 0.9rem;
+    }
+
+    .post-content th,
+    .post-content td {
+      padding: 0.75rem 1rem;
+    }
+  }
+
+  /* UAV/Drone Content Specific Styles */
+  .post-content .drone-specs {
+    background: var(--post-content-blockquote-bg);
+    border: 2px solid var(--post-content-table-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    position: relative;
+  }
+
+  .post-content .drone-specs::before {
+    content: '🚁';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    opacity: 0.6;
+  }
+
+  .post-content .flight-warning {
+    background: oklch(0.96 0.02 85);  /* Light cream background */
+    border-left: 4px solid oklch(0.60 0.12 50);  /* Orange/amber border */
+    padding: 1rem 1.5rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    margin: 1.5rem 0;
+    color: oklch(0.30 0 0);  /* Dark gray text */
+    box-shadow: 0 2px 8px var(--post-content-shadow);
+  }
+
+  .dark .post-content .flight-warning {
+    background: oklch(0.18 0.04 85);  /* Dark cream background */
+    color: oklch(0.80 0 0);  /* Light gray text */
+    border-left-color: oklch(0.70 0.10 50);  /* Brighter amber border */
+  }
+
+  .post-content .technical-note {
+    background: oklch(0.94 0.02 240);  /* Light teal background */
+    border-left: 4px solid oklch(0.28 0.15 240);  /* Primary accent border */
+    padding: 1rem 1.5rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    margin: 1.5rem 0;
+    color: oklch(0.25 0 0);  /* Dark gray text */
+    box-shadow: 0 2px 8px var(--post-content-shadow);
+  }
+
+  .dark .post-content .technical-note {
+    background: oklch(0.14 0.06 240);  /* Dark teal background */
+    color: oklch(0.80 0 0);  /* Light gray text */
+    border-left-color: oklch(0.55 0.12 240);  /* Bright teal border */
+  }
+
+  /* Cream accent for special drone content */
+  .post-content .uav-highlight {
+    background: linear-gradient(135deg, 
+      oklch(0.96 0.02 85), 
+      oklch(0.94 0.03 240));  /* Cream to light teal gradient */
+    border: 1px solid oklch(0.28 0.15 240);  /* Primary accent border */
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+    color: oklch(0.20 0 0);  /* Dark gray text */
+  }
+
+  .post-content .uav-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+      oklch(0.28 0.15 240), 
+      oklch(0.95 0.02 85), 
+      oklch(0.28 0.15 240));  /* Primary to cream to primary */
+  }
+
+  .dark .post-content .uav-highlight {
+    background: linear-gradient(135deg, 
+      oklch(0.16 0.04 85), 
+      oklch(0.14 0.06 240));  /* Dark cream to dark teal */
+    border-color: oklch(0.55 0.12 240);  /* Bright teal border */
+    color: oklch(0.85 0 0);  /* Light gray text */
+  }
+}
+

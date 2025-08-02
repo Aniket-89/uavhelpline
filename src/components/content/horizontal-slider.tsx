@@ -4,7 +4,7 @@ import { StoryCard } from "./story-card";
 
 export default function HorizontalSlider({ posts }: { posts: Post[] }) {
   return (
-    <div className="w-full max-w-7xl mx-auto px-4">
+    <div className="w-full max-w-7xl mx-auto">
       {/* Mobile: 2 cards in view */}
       <div className="grid grid-cols-2 gap-1 sm:hidden">
         {posts.slice(0, 2).map((post) => (

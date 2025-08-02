@@ -114,23 +114,24 @@ export function HeroSection() {
   const [featuredPost, ...sidePosts] = posts;
 
   return (
-    <section className="lg:mt-32 mt-12 pt-12">
+    <section className="md:mt-32 mt-12 pt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:py-16">
         
         {/* Mobile Layout - Stacked */}
-        <div className="block lg:hidden space-y-6">
+        <div className="block md:hidden space-y-6">
           {/* Featured Post - First on mobile */}
           <div className="space-y-4">
-            <StoryCard post={featuredPost} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="text-left px-4 pb-2" />
+            <StoryCard post={featuredPost} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="text-left px-2 pb-4" />
             <hr />
             <StoryCard post={sidePosts[1]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="px-0" className="bg-transparent w-full" />
+            <hr />
           </div>
           
           {/* Side Posts - Second on mobile */}
           <div className="space-y-4 p-0">
             <StoryCard post={sidePosts[0]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} contentClassName="p-0" />
             <hr />
-            <StoryCard post={sidePosts[2] || sidePosts[0]} skipImage={false} showCategories={false} showMetaInfo={true} showPreview={true} contentClassName="p-0" />
+            <StoryCard post={sidePosts[2] || sidePosts[0]} skipImage={false} showCategories={false} showMetaInfo={true} showPreview={true} contentClassName="p-0" className="grid grid-cols-2 max-w-full w-full"/>
           </div>
           
           {/* Subscriber Comments - Last on mobile */}
@@ -140,20 +141,20 @@ export function HeroSection() {
         </div>
 
         {/* Desktop Layout - Grid */}
-        <div className="hidden lg:grid grid-cols-12 gap-6">
-          <div className="col-span-3 flex flex-col gap-4">
+        <div className="hidden md:grid grid-cols-12 gap-6">
+          <div className="lg:col-span-3 md:col-span-4 flex flex-col gap-4">
             <StoryCard post={sidePosts[0]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} className=" p-2" />
             <hr />
             <StoryCard post={sidePosts[2] || sidePosts[0]} skipImage={false} showCategories={false} showMetaInfo={true} showPreview={true} className="p-2" />
           </div>
-          <div className="col-span-6">
+          <div className="lg:col-span-6 md:col-span-8">
             <div className="space-y-4">
               <StoryCard post={featuredPost} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="text-left px-8 pb-2" className="-mt-24"/>
               <hr />
               <StoryCard post={sidePosts[1]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="px-0" className="bg-transparent w-full" />
             </div>
           </div>
-          <div className="col-span-3">
+          <div className="lg:col-span-3 md:col-span-12">
             <SubscriberComments />
           </div>
         </div>

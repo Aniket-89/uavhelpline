@@ -14,8 +14,8 @@ export default async function Home() {
       {/* Latest Stories Hero Section */}
       <HeroSection />
       <BlogsSection title="Weekly Reads" />
-      <StorySlideshow title="Featured UAV Analysis" />
       <MagazineLayout title="Podcasts" />
+      <StorySlideshow title="Featured UAV Analysis" />
       <BlogsSection title="The IPO train" />
       <MagazineLayout title="Listed Companies" />
       <CTASection />

@@ -113,11 +113,10 @@ const config: Config = {
         xl: "var(--radius-xl)",
       },
       fontFamily: {
-        archivo: ["var(--font-archivo)", "system-ui", "sans-serif"],
-        mono: ["var(--font-archivo)", "monospace"],
-        headline: ["var(--font-libre-caslon-text)", "system-ui", "sans-serif"],
-        body: ["var(--font-playfair-display)", "system-ui", "sans-serif"],
-        serif: ["var(--font-libre-caslon-text)", "system-ui", "sans-serif"],
+        sans: ["var(--font-archivo)", "system-ui", "sans-serif"],
+        headline: ['"Reckless Bold"', "Georgia", "serif"],
+        body: ['"Ivar Text Hydro Regular"', "Georgia", "serif"],
+        serif: ['"Reckless Bold"', "Georgia", "serif"],
       },
       keyframes: {
         "accordion-down": {

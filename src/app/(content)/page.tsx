@@ -1,15 +1,18 @@
-import Image from "next/image";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap, Shield, Users } from "lucide-react";
 import { HeroSection } from "@/components/content/home/hero-section";
+import BlogsSection from "@/components/content/home/blogs-section";
+import MagazineLayout from "@/components/content/home/magazine-layout";
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="min-h-screen mt-12">
       {/* Latest Stories Hero Section */}
       <HeroSection />
-
+      <BlogsSection />
+      <MagazineLayout />
       {/* Features Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">

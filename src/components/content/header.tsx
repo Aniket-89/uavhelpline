@@ -54,9 +54,9 @@ export default function Header() {
     `;
 
     const logoClasses = `
-        font-bold transition-all duration-300 ease-in-out
+        font-bold font-sans text-nowrap transition-all duration-300 ease-in-out
         ${isHomePage && !isScrolled 
-            ? 'text-8xl md:text-7xl text-primary drop-shadow-lg' 
+            ? 'text-6xl md:text-7xl text-primary drop-shadow-lg' 
             : 'text-lg md:text-2xl text-foreground'
         }
     `;
@@ -98,12 +98,12 @@ export default function Header() {
 
                     
                     <nav className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-6">Explore</h3>
-                        <ul className="space-y-3">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-6 font-headline">Explore</h3>
+                        <ul className="space-y-3 font-headline">
                             <li>
                                 <Link 
                                     href="/stories" 
-                                    className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
+                                    className="block py-2 px-3 font-headline hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
                                     onClick={() => setIsSidebarActive(false)}
                                 >
                                     All Stories
@@ -112,7 +112,7 @@ export default function Header() {
                             <li>
                                 <Link 
                                     href="/stories?category=guides" 
-                                    className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
+                                    className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors font-headline"
                                     onClick={() => setIsSidebarActive(false)}
                                 >
                                     Guides & Tutorials
@@ -121,7 +121,7 @@ export default function Header() {
                             <li>
                                 <Link 
                                     href="/stories?category=reviews" 
-                                    className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
+                                    className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors font-headline"
                                     onClick={() => setIsSidebarActive(false)}
                                 >
                                     Drone Reviews
@@ -130,7 +130,7 @@ export default function Header() {
                             <li>
                                 <Link 
                                     href="/stories?category=technology" 
-                                    className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
+                                    className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors font-headline"
                                     onClick={() => setIsSidebarActive(false)}
                                 >
                                     Technology

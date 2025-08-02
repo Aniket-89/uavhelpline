@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
+@import url(https://db.onlinewebfonts.com/c/22aff4497483f2c6a5e001453850b935?family=Ivar+Text+Hydro+Regular); 
+@import url(https://db.onlinewebfonts.com/c/34bf77357fafcf04d4061d4e19a32c85?family=Reckless+Bold);
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -6,7 +9,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-archivo);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -53,12 +56,9 @@
   --breakpoint-xl: 1200px;
   --breakpoint-xxl: 1400px;
   
-  --font-headline: var(--font-libre-caslon-text);
-  --font-body: var(--font-playfair-display);
-  --font-serif: var(--font-archivo);
-
+  --font-headline: "Reckless Bold";
+  --font-body: "Ivar Text Hydro Regular";
   
-  --font-body: var(--font-playfair-display);
   
   /* Core UI Colors */
   --background: rgb(247,242,242);  /* Dark teal background */
@@ -117,6 +117,27 @@
 
 }
 
+@font-face {
+  font-family: "Reckless Bold";
+  src: url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.eot");
+  src: url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.eot?#iefix") format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.woff2") format("woff2"),
+  url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.woff") format("woff"),
+  url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.ttf") format("truetype"),
+  url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.svg#Reckless Bold") format("svg");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ivar Text Hydro Regular";
+  src: url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.eot");
+  src: url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.eot?#iefix") format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.woff2") format("woff2"),
+  url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.woff") format("woff"),
+  url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.ttf") format("truetype"),
+  url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.svg#Ivar Text Hydro Regular") format("svg");
+  font-display: swap;
+}
 
 @layer base {
   * {
@@ -138,27 +159,27 @@
     color: var(--foreground);
     font-size: 18px;
     font-weight: 400;  
-    font-family: var(--font-playfair-display);
+    font-family: var(--font-body);
   }
 
   h1, h2, h3, h5, h6 {
-    font-family: var(--font-libre-caslon-text);
+    font-family: var(--font-headline);
   }
   h4 {
-    font-family: var(--font-archivo);
+    font-family: var(--font-sans);
   }
 
-
-  /* p, li, span, div {
-    font-family: var(--font-body);
-  } */
-  a {
-    font-family: var(--font-archivo);
+  /* a {
+    font-family: var(--font-sans);
     font-weight: 500;
+  } */
+  
+  input, textarea, select {
+    font-family: var(--font-sans);
   }
 
   button {
-    font-family: var(--font-archivo);
+    font-family: var(--font-sans);
   }
 }
 

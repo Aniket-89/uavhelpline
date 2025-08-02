@@ -34,7 +34,7 @@ export function SearchAndFilters({
             placeholder="Search drone stories, guides, and reviews..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10 h-8 sm:h-10 text-sm rounded-xs bg-white border-0"
+            className="pl-10 h-8 sm:h-10 text-sm rounded-xs bg-white border-0 font-sans"
           />
         </div>
 
@@ -46,7 +46,7 @@ export function SearchAndFilters({
             <select
               value={selectedCategory}
               onChange={(e) => onCategoryChange(e.target.value)}
-              className="h-8 sm:h-10 px-2 sm:px-3 rounded-xs border border-input bg-white text-foreground text-sm min-w-[120px] sm:min-w-[140px] flex-1 sm:flex-none"
+              className="h-8 sm:h-10 px-2 sm:px-3 rounded-xs border border-input bg-white text-foreground text-sm min-w-[120px] sm:min-w-[140px] flex-1 sm:flex-none font-sans"
             >
               <option value="all">All Categories</option>
               {categories.map((category) => (
@@ -63,7 +63,7 @@ export function SearchAndFilters({
               variant={viewMode === "grid" ? "default" : "outline"}
               size="sm"
               onClick={() => onViewModeChange("grid")}
-              className="rounded-r-none rounded-l-xs h-8 sm:h-10 px-2 sm:px-3 flex-1 sm:flex-none text-xs sm:text-sm"
+              className="rounded-r-none rounded-l-xs h-8 sm:h-10 px-2 sm:px-3 flex-1 sm:flex-none text-xs sm:text-sm font-sans"
             >
               <Grid className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="ml-1 sm:ml-2 sm:hidden">Grid</span>
@@ -72,7 +72,7 @@ export function SearchAndFilters({
               variant={viewMode === "list" ? "default" : "outline"}
               size="sm"
               onClick={() => onViewModeChange("list")}
-              className="rounded-l-none rounded-r-xs h-8 sm:h-10 px-2 sm:px-3 flex-1 sm:flex-none text-xs sm:text-sm"
+              className="rounded-l-none rounded-r-xs h-8 sm:h-10 px-2 sm:px-3 flex-1 sm:flex-none text-xs sm:text-sm font-sans"
             >
               <List className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="ml-1 sm:ml-2 sm:hidden">List</span>

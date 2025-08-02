@@ -101,3 +101,18 @@ export const usePublishedPosts = () => {
     },
   });
 };
+
+// Hook specifically for published blog posts
+export const usePublishedBlogPosts = () => {
+  return useQuery<Post[]>({
+    queryKey: ["published-blog-posts"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/posts");
+      // Filter only published posts with "blogs" category
+      return data.filter((post: Post) => 
+        post.status === "published" && 
+        post.categories?.some(cat => cat.slug === "blogs")
+      );
+    },
+  });
+};

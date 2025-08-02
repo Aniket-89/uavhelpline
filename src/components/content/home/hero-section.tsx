@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, TrendingUp } from "lucide-react";
 import type { Post } from "@/types";
 import { StoryCard } from "../story-card";
+import DividerLink from "../divider-link";
 
 // No custom hook needed - using existing usePublishedPosts
 
@@ -93,13 +94,13 @@ function HeroLoading() {
 export function HeroSection() {
   const { data: allPosts = [], isLoading, error } = usePublishedPosts();
   
-  // Sort by date and get latest 7 posts
+  // Sort by date and get latest posts
   const posts = allPosts
     .sort((a: Post, b: Post) => 
       new Date(b.publishedAt || b.updatedAt).getTime() - 
       new Date(a.publishedAt || a.updatedAt).getTime()
     )
-    .slice(0, 7);
+    .slice(0, 6);
   
   if (isLoading) {
     return (
@@ -124,90 +125,22 @@ export function HeroSection() {
   const [featuredPost, ...sidePosts] = posts;
 
   return (
-    <section className="border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        {/* Mobile Layout: Single Column */}
-        <div className="block lg:hidden space-y-6">
-          {/* Featured Story on Mobile */}
-          <div className="mb-8">
-            <StoryCard post={featuredPost} />
-          </div>
-          
-          {/* Side Stories on Mobile */}
+    <section className="border-b border-border  my-32 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:py-16">
+      <div className="grid grid-cols-12 gap-6">
+        <div className="col-span-3 flex flex-col gap-4">
+          <StoryCard post={sidePosts[0]} skipImage={true}  className="h-[120px] p-2"/>
+          <hr />
+          <StoryCard post={sidePosts[1]} skipImage={false} />
+        </div>
+        <div className="col-span-6">
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">More Stories</h2>
-            {sidePosts.slice(0, 3).map((post: Post) => (
-              <StoryCard key={post.id} post={post} className="mb-4" />
-            ))}
+            <StoryCard post={featuredPost} className="max-w-full -mt-24 bg-white h-fit"/>
           </div>
         </div>
-
-        {/* Tablet Layout: 2 Column */}
-        <div className="hidden lg:block xl:hidden">
-          <div className="grid grid-cols-2 gap-6">
-            {/* Featured Story takes left column */}
-            <div className="col-span-1">
-              <StoryCard post={featuredPost} />
-            </div>
-            
-            {/* Side stories in right column */}
-            <div className="col-span-1 space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Trending Stories</h2>
-              {sidePosts.slice(0, 3).map((post: Post) => (
-                <StoryCard key={post.id} post={post} skipImage={true} className="mb-4" />
-              ))}
-            </div>
+        <div className="col-span-3">
+            {/* <SubscriberComments /> */}
           </div>
-        </div>
-
-        {/* Desktop Layout: 4 Column Grid */}
-        <div className="hidden xl:block">
-          <div className="grid grid-cols-12 gap-6">
-            {/* Left Column: Two smaller stories */}
-            <div className="col-span-3 space-y-6">
-              {sidePosts.slice(0, 2).map((post: Post) => (
-                <StoryCard key={post.id} post={post} skipImage={false} />
-              ))}
-            </div>
-
-            {/* Center: Large featured story */}
-            <div className="col-span-6">
-              <StoryCard post={featuredPost}  className="bg-white"/>
-            </div>  
-
-            {/* Right Column: Three smaller stories */}
-            <div className="col-span-3 space-y-4">
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" />
-                Trending
-              </h3>
-              {sidePosts.slice(2, 5).map((post: Post) => (
-                <StoryCard key={post.id} post={post} skipImage={true} />
-              ))}
-            </div>
-        </div>
-
-          {/* Bottom Row: Additional stories on large screens */}
-          {sidePosts.length > 5 && (
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <div className="grid grid-cols-3 gap-6">
-                {sidePosts.slice(5, 8).map((post: Post) => (
-                  <StoryCard key={post.id} post={post} />
-                ))}
-              </div>
-          </div>
-        )}
-        </div>
-
-        {/* View All Stories Link */}
-        <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-          <Link 
-            href="/stories" 
-            className="inline-flex items-center gap-1 sm:gap-2 text-red-500 hover:text-red-600 font-semibold transition-colors text-sm sm:text-base"
-          >
-            View All Stories
-            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
-          </Link>
         </div>
       </div>
     </section>

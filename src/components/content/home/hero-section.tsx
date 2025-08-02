@@ -114,7 +114,7 @@ export function HeroSection() {
   const [featuredPost, ...sidePosts] = posts;
 
   return (
-    <section className="border-b border-border lg:mt-32 mt-12 py-12">
+    <section className="lg:mt-32 mt-12 pt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:py-16">
         
         {/* Mobile Layout - Stacked */}
@@ -142,7 +142,7 @@ export function HeroSection() {
         {/* Desktop Layout - Grid */}
         <div className="hidden lg:grid grid-cols-12 gap-6">
           <div className="col-span-3 flex flex-col gap-4">
-            <StoryCard post={sidePosts[0]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} className="h-[160px] p-2" />
+            <StoryCard post={sidePosts[0]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} className=" p-2" />
             <hr />
             <StoryCard post={sidePosts[2] || sidePosts[0]} skipImage={false} showCategories={false} showMetaInfo={true} showPreview={true} className="p-2" />
           </div>

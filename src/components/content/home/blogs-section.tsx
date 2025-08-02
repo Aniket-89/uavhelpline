@@ -33,7 +33,7 @@ export default function BlogsSection({title}: {title: string}) {
     }
 
     return (
-        <section className="py-12 px-4">
+        <section className="pb-4 px-4">
             <div className="max-w-7xl mx-auto">
                 <DividerLink href="/blogs">{title}</DividerLink>
                 <HorizontalSlider posts={posts} />

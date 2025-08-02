@@ -61,7 +61,7 @@ export function StoryCard({ post, className, skipImage = false, showCategories =
 
         {/* Title */}
         <h2 className={`font-italic mb-2 leading-snug md:leading-tight ${showPreview ? 'line-clamp-3' : 'line-clamp-2 text-sm md:text-base lg:text-lg'} relative cursor-pointer overflow-hidden ${
-          skipImage ? 'text-2xl italic' : isBig ? 'text-3xl md:text-3xl font-bold lg:text-3xl xl:text-4xl italic' : 'font-medium text-2xl lg:text-3xl'
+          skipImage ? 'text-xl italic' : isBig ? 'text-3xl md:text-3xl font-bold lg:text-3xl xl:text-4xl italic' : 'font-medium text-2xl lg:text-2xl'
         }`}>
           <Link href={`/stories/${post.slug}`} className="block relative z-10">
             <span className="relative">

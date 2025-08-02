@@ -60,15 +60,15 @@ export default function MagazineLayout({title}: {title: string}) {
             <DividerLink href="/blogs">{title}</DividerLink>
             
             {/* Mobile Layout - Stacked */}
-            <div className="block lg:hidden space-y-6">
+            <div className="block md:hidden space-y-6">
                 {/* Featured Post - First on mobile */}
                 <StoryCard post={posts[0]} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="text-left px-4 pb-2" />
                 
                 {/* Left Side Posts - Second on mobile */}
-                <div className="space-y-4">
-                    <StoryCard post={posts[1]} skipImage={true} showPreview={true} />
+                <div className="space-y-4 w-full">
+                    <StoryCard post={posts[1]} skipImage={true} showPreview={true} className="max-w-full"/>
                     <hr />
-                    <StoryCard post={posts[2]} showPreview={true}/>
+                    <StoryCard post={posts[2]} showPreview={true} className="max-w-full w-full grid grid-cols-2" />
                     <hr />
 
                 </div>
@@ -87,20 +87,25 @@ export default function MagazineLayout({title}: {title: string}) {
             </div>
 
             {/* Desktop Layout - Grid */}
-            <div className="hidden lg:grid grid-cols-12 gap-6">
-                <div className="col-span-3 space-y-6 mt-2">
+            <div className="hidden md:grid grid-cols-12 gap-6">
+                <div className="lg:col-span-3 md:col-span-3 space-y-6 mt-2">
                     <StoryCard post={posts[1]} skipImage={true} showPreview={true} />
                     <hr />
                     <StoryCard post={posts[2]} showPreview={true}/>
                 </div>
-                <div className="col-span-6">
-                    <StoryCard post={posts[0]} showPreview={true} isBig={true} className="bg-white aspect-auto max-w-full" />
-                </div>
-                <div className="col-span-3 mt-2">
-                    <StoryCard post={posts[3]} skipImage={true} showPreview={true}/>
+                <div className="lg:col-span-9 md:col-span-9">
+                    <div className="grid lg:grid-cols-12 gap-6">
+
+                    <StoryCard post={posts[0]} showPreview={true} isBig={true} className="bg-white aspect-auto max-w-full col-span-12 lg:col-span-9" />
+                    <div className=" col-span-12 lg:col-span-3">
+
+                    <StoryCard post={posts[3]} skipImage={true} showPreview={true} className="aspect-auto max-w-full"/>
                     <hr />
                     {posts[4] && <StoryCard post={posts[4]} skipImage={true} showPreview={true}/>}
+                    </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     );

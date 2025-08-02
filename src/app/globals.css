@@ -1,6 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 @import url(https://db.onlinewebfonts.com/c/22aff4497483f2c6a5e001453850b935?family=Ivar+Text+Hydro+Regular); 
 @import url(https://db.onlinewebfonts.com/c/34bf77357fafcf04d4061d4e19a32c85?family=Reckless+Bold);
+
+/* Custom Reckless Italic Font */
+@font-face {
+  font-family: 'Reckless Neue Medium Italic';
+  src: url('/reckless-neue-medium-italic.eot');
+  src: url('/reckless-neue-medium-italic.eot?#iefix') format('embedded-opentype'),
+       url('/reckless-neue-medium-italic.woff2') format('woff2'),
+       url('/reckless-neue-medium-italic.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Dotted HR Styling */
+hr {
+  border: none;
+  border-top: 2px dotted rgb(209, 213, 219); /* gray-300 */
+  margin: 2rem 0;
+}
+
+/* Hide scrollbar for horizontal sliders */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -58,23 +87,24 @@
   
   --font-headline: "Reckless Bold";
   --font-body: "Ivar Text Hydro Regular";
+  --font-italic: "Reckless Neue Medium Italic";
   
   
   /* Core UI Colors */
   --background: rgb(247,242,242);  /* Dark teal background */
-  --foreground: rgb(50,31,31);
+  --foreground: #321f1fb8;
   --card: oklch(0.97 0.01 240);  /* Very light teal background */
   --card-foreground: oklch(0.20 0 0);  /* Dark gray text */
   --popover: rgb(242,222,222);
-  --popover-foreground: oklch(0.15 0 0);
+  --popover-foreground: #321f1fcc;
   --primary: rgb(255,51,51);  /* Primary #133E87 */
   --primary-foreground: oklch(0.98 0 0);  /* White text on primary */
   --secondary: rgb(50,31,31);  /* Secondary #F3F3E0 cream */
   --secondary-foreground: oklch(0.25 0 0);  /* Dark gray on cream */
   --muted: rgb(238,231,231);  /* Light teal muted background */
   --muted-foreground: oklch(0.50 0 0);  /* Medium gray text */
-  --accent: rgb(154,137,137);  /* Same as primary */
-  --accent-foreground: oklch(0.98 0 0);
+  --accent: #eee7e7;  /* Same as primary */
+  --accent-foreground: rgb(154,137,137);
   --destructive: oklch(0.55 0.18 15);  /* Red for errors */
   --border: rgba(50, 31, 31, 0.1607843137);  /* Light teal borders */
   --input: oklch(0.96 0.01 240);  /* Very light teal inputs */
@@ -163,12 +193,20 @@
   }
 
   h1, h2, h3, h5, h6 {
+    color: var(--secondary);
     font-family: var(--font-headline);
   }
+  h2 {
+    color: var(--secondary);
+    font-family: var(--font-italic);
+  }
   h4 {
+    color: var(--secondary);
     font-family: var(--font-sans);
   }
-
+  p {
+    color: var(--foreground);
+  }
   /* a {
     font-family: var(--font-sans);
     font-weight: 500;
@@ -213,12 +251,14 @@
     font-size: 2.5rem;
     margin-bottom: 2rem;
     margin-top: 3rem;
+    color: var(--secondary);
     border-bottom: 2px solid var(--post-content-table-border);
     padding-bottom: 0.75rem;
   }
 
   .post-content h2 {
     font-size: 2rem;
+    color: var(--secondary);
     margin-bottom: 1rem;
     margin-top: 1.5rem;
     position: relative;
@@ -237,18 +277,21 @@
   }
 
   .post-content h3 {
+    color: var(--secondary);
     font-size: 1.5rem;
     margin-bottom: 1rem;
     margin-top: 1.5rem;
   }
 
   .post-content h4 {
+    color: var(--secondary);
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
     margin-top: 1.5rem;
   }
 
   .post-content h5 {
+    color: var(--secondary);
     font-size: 1.125rem;
     margin-bottom: 0.5rem;
     margin-top: 1.5rem;

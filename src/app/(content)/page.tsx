@@ -11,8 +11,10 @@ export default async function Home() {
     <div className="min-h-screen mt-12">
       {/* Latest Stories Hero Section */}
       <HeroSection />
-      <BlogsSection />
-      <MagazineLayout />
+      <BlogsSection title="Weekly Reads" />
+      <MagazineLayout title="Podcasts" />
+      <BlogsSection title="The IPO train" />
+      <MagazineLayout title="Listed Companies" />
       {/* Features Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">

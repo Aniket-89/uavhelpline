@@ -117,6 +117,7 @@ const config: Config = {
         headline: ['"Reckless Bold"', "Georgia", "serif"],
         body: ['"Ivar Text Hydro Regular"', "Georgia", "serif"],
         serif: ['"Reckless Bold"', "Georgia", "serif"],
+        italic: ["var(--font-italic)", "Georgia", "serif"],
       },
       keyframes: {
         "accordion-down": {

@@ -10,17 +10,22 @@ interface StoryCardProps {
   post: Post;
   className?: string;
   skipImage?: boolean;
+  showCategories?: boolean;
+  showMetaInfo?: boolean;
+  showPreview?: boolean;
+  isBig?: boolean;
+  contentClassName?: string;
 }
 
-export function StoryCard({ post, className, skipImage = false }: StoryCardProps) {
+export function StoryCard({ post, className, skipImage = false, showCategories = false, showMetaInfo = false, showPreview = false, isBig = false, contentClassName = '' }: StoryCardProps) {
   return (
-    <Card className={`group bg-transparent border-0 shadow-none pb-4 transition-all duration-300 overflow-hidden rounded-xs max-w-xs flex-shrink-0 ${
+    <Card className={`group bg-transparent border-0 shadow-none transition-all duration-300 overflow-hidden rounded-xs ${isBig ? 'max-w-full bg-white h-full' : 'max-w-xs'} flex-shrink-0 ${
       skipImage ? '' : 'border-0 shadow-none'
     } ${className || ''}`}>
       {/* Image Section - Only show if not skipping */}
       {!skipImage && (
         <div className="relative overflow-hidden">
-          <div className="aspect-[16/10] relative object-cover group-hover:scale-105 transition-all duration-500 rounded-xs">
+          <div className={`${isBig ? 'aspect-[16/10]' : 'aspect-[16/9]'} relative object-cover group-hover:scale-105 transition-all duration-500 rounded-xs`}>
             <Image 
               src={post.thumbnail || '/general-img-landscape.png'} 
               alt={post.title}
@@ -32,10 +37,10 @@ export function StoryCard({ post, className, skipImage = false }: StoryCardProps
         </div>
       )}
 
-      <CardContent className={skipImage ? "p-0" : "p-0"}>
+      <CardContent className={`${contentClassName || ''} ${isBig ? "" : "p-0"}`}>
         {/* Categories */}
-        {/* {post.categories && post.categories.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-2">
+        {showCategories && post.categories && post.categories.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-1">
             {post.categories.slice(0, skipImage ? 1 : 3).map((category) => (
               <Badge 
                 key={category.id} 
@@ -52,42 +57,29 @@ export function StoryCard({ post, className, skipImage = false }: StoryCardProps
               </Badge>
             )}
           </div>
-        )} */}
+        )}
 
         {/* Title */}
-        <h2 className={`font-medium font-headline mb-2 leading-tight line-clamp-2 relative cursor-pointer overflow-hidden ${
-          skipImage ? 'text-md italic' : 'text-lg md:text-xl'
+        <h2 className={`font-italic mb-2 leading-snug md:leading-tight ${showPreview ? 'line-clamp-3' : 'line-clamp-2 text-sm md:text-base lg:text-lg'} relative cursor-pointer overflow-hidden ${
+          skipImage ? 'text-2xl italic' : isBig ? 'text-3xl md:text-3xl font-bold lg:text-3xl xl:text-4xl italic' : 'font-medium text-2xl lg:text-3xl'
         }`}>
           <Link href={`/stories/${post.slug}`} className="block relative z-10">
-            {post.title.split(' ').map((word, index) => (
-              <span
-                key={index}
-                className="relative inline-block mr-1 transition-colors duration-500"
-                style={{ 
-                  transitionDelay: `${index * 80}ms`
-                }}
-              >
-                {word}
-                <span 
-                  className="absolute inset-0 bg-accent/40 transform scale-x-0 origin-left transition-transform duration-300 ease-out group-hover:scale-x-100 -z-10 rounded-xs"
-                  style={{ 
-                    transitionDelay: `${index * 80}ms`
-                  }}
-                ></span>
-              </span>
-            ))}
+            <span className="relative">
+              {post.title}
+              <span className="absolute inset-0 bg-accent/40 transform scale-x-0 origin-left transition-transform duration-500 ease-out group-hover:scale-x-100 -z-10 rounded-xs"></span>
+            </span>
           </Link>
         </h2>
 
         {/* Preview - Show less on skipImage */}
-        {/* {!skipImage && ( */}
-          <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-2">
+        {showPreview && (
+          <p className="leading-tight mb-4 line-clamp-2">
             {getContentPreview(post.content, skipImage ? 60 : 120)}
           </p>
-        {/* )} */}
+        )}
 
         {/* Meta Info */}
-        {/* {!skipImage && ( */}
+        {showMetaInfo && (
         <div className={`flex items-center text-xs text-gray-500 ${
           skipImage ? 'gap-2 flex-wrap' : 'gap-4'
         }`}>
@@ -102,7 +94,7 @@ export function StoryCard({ post, className, skipImage = false }: StoryCardProps
               <span>{calculateReadingTime(post.content)} min read</span>
             </div>
         </div>
-          {/* )} */}
+        )}
       </CardContent>
     </Card>
   );

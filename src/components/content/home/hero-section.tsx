@@ -1,12 +1,11 @@
 "use client";
 import { usePublishedPosts } from "@/hooks/usePosts";
-import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRight, TrendingUp } from "lucide-react";
 import type { Post } from "@/types";
 import { StoryCard } from "../story-card";
 import DividerLink from "../divider-link";
+import { SubscriberComments } from "../subscriber-comments";
 
 // No custom hook needed - using existing usePublishedPosts
 
@@ -16,27 +15,8 @@ function HeroLoading() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       {/* Mobile Loading */}
       <div className="block lg:hidden space-y-6">
-        <Card className="overflow-hidden rounded-xs">
-          <Skeleton className="aspect-[16/10] w-full rounded-xs" />
-          <div className="p-4">
-            <Skeleton className="h-6 w-full mb-2" />
-            <Skeleton className="h-4 w-3/4" />
-          </div>
-        </Card>
-        {[...Array(3)].map((_, i) => (
-          <Card key={i} className="overflow-hidden rounded-xs">
-            <Skeleton className="aspect-[16/10] w-full rounded-xs" />
-            <div className="p-4">
-              <Skeleton className="h-5 w-full mb-2" />
-              <Skeleton className="h-3 w-2/3" />
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {/* Tablet Loading */}
-      <div className="hidden lg:block xl:hidden">
-        <div className="grid grid-cols-2 gap-6">
+        {/* Featured Post Loading - First on mobile */}
+        <div className="space-y-4">
           <Card className="overflow-hidden rounded-xs">
             <Skeleton className="aspect-[16/10] w-full rounded-xs" />
             <div className="p-4">
@@ -44,20 +24,35 @@ function HeroLoading() {
               <Skeleton className="h-4 w-3/4" />
             </div>
           </Card>
-          <div className="space-y-4">
-            <Skeleton className="h-6 w-32 mb-4" />
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="p-4">
-                <Skeleton className="h-5 w-full mb-2" />
-                <Skeleton className="h-3 w-2/3" />
-              </div>
-            ))}
+          <div className="p-4">
+            <Skeleton className="h-5 w-full mb-2" />
+            <Skeleton className="h-3 w-2/3" />
           </div>
+        </div>
+        
+        {/* Side Posts Loading - Second on mobile */}
+        <div className="space-y-4">
+          {[...Array(2)].map((_, i) => (
+            <div key={i}>
+              <Card className="overflow-hidden rounded-xs">
+                <Skeleton className="aspect-[16/10] w-full rounded-xs" />
+                <div className="p-4">
+                  <Skeleton className="h-5 w-full mb-2" />
+                  <Skeleton className="h-3 w-2/3" />
+                </div>
+              </Card>
+            </div>
+          ))}
+        </div>
+        
+        {/* Subscriber Comments Loading - Last on mobile */}
+        <div className="p-4">
+          <Skeleton className="h-32 w-full rounded-xs" />
         </div>
       </div>
 
       {/* Desktop Loading */}
-      <div className="hidden xl:block">
+      <div className="hidden lg:block">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-3 space-y-6">
             {[...Array(2)].map((_, i) => (
@@ -77,13 +72,7 @@ function HeroLoading() {
             </Card>
           </div>
           <div className="col-span-3 space-y-4">
-            <Skeleton className="h-4 w-20 mb-4" />
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="p-2">
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-3 w-2/3" />
-              </div>
-            ))}
+            <Skeleton className="h-32 w-full rounded-xs" />
           </div>
         </div>
       </div>
@@ -125,21 +114,47 @@ export function HeroSection() {
   const [featuredPost, ...sidePosts] = posts;
 
   return (
-    <section className="border-b border-border  my-32 py-12">
+    <section className="border-b border-border lg:mt-32 mt-12 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:py-16">
-      <div className="grid grid-cols-12 gap-6">
-        <div className="col-span-3 flex flex-col gap-4">
-          <StoryCard post={sidePosts[0]} skipImage={true}  className="h-[120px] p-2"/>
-          <hr />
-          <StoryCard post={sidePosts[1]} skipImage={false} />
-        </div>
-        <div className="col-span-6">
+        
+        {/* Mobile Layout - Stacked */}
+        <div className="block lg:hidden space-y-6">
+          {/* Featured Post - First on mobile */}
           <div className="space-y-4">
-            <StoryCard post={featuredPost} className="max-w-full -mt-24 bg-white h-fit"/>
+            <StoryCard post={featuredPost} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="text-left px-4 pb-2" />
+            <hr />
+            <StoryCard post={sidePosts[1]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="px-0" className="bg-transparent w-full" />
+          </div>
+          
+          {/* Side Posts - Second on mobile */}
+          <div className="space-y-4 p-0">
+            <StoryCard post={sidePosts[0]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} contentClassName="p-0" />
+            <hr />
+            <StoryCard post={sidePosts[2] || sidePosts[0]} skipImage={false} showCategories={false} showMetaInfo={true} showPreview={true} contentClassName="p-0" />
+          </div>
+          
+          {/* Subscriber Comments - Last on mobile */}
+          <div>
+            <SubscriberComments />
           </div>
         </div>
-        <div className="col-span-3">
-            {/* <SubscriberComments /> */}
+
+        {/* Desktop Layout - Grid */}
+        <div className="hidden lg:grid grid-cols-12 gap-6">
+          <div className="col-span-3 flex flex-col gap-4">
+            <StoryCard post={sidePosts[0]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} className="h-[160px] p-2" />
+            <hr />
+            <StoryCard post={sidePosts[2] || sidePosts[0]} skipImage={false} showCategories={false} showMetaInfo={true} showPreview={true} className="p-2" />
+          </div>
+          <div className="col-span-6">
+            <div className="space-y-4">
+              <StoryCard post={featuredPost} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="text-left px-8 pb-2" className="-mt-24"/>
+              <hr />
+              <StoryCard post={sidePosts[1]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="px-0" className="bg-transparent w-full" />
+            </div>
+          </div>
+          <div className="col-span-3">
+            <SubscriberComments />
           </div>
         </div>
       </div>

@@ -21,7 +21,7 @@ export function StoryHero({ post, onShare }: StoryHeroProps) {
       <div className="max-w-screen-xl mx-auto px-3 lg:py-12 py-6 relative z-10">
         {/* Back Navigation */}
         <Link href="/stories">
-          <Link href="/stories" className="mb-2 flex items-center gap-2 hover:bg-accent/80 -ml-2 text-sm text-muted-foreground">
+          <Link href="/stories" className="mb-2 flex items-center gap-2 -ml-2 text-sm text-muted-foreground">
             <ArrowLeft className="w-4 h-4 " />
             Back to Stories
           </Link>
@@ -34,9 +34,9 @@ export function StoryHero({ post, onShare }: StoryHeroProps) {
           
           {/* Left Column - Title and Description */}
           <div className="lg:col-span-3">
-            <h1 className="text-2xl text-secondary md:text-4xl lg:text-5xl font-headline italic font-semibold leading-tight text-foreground mb-6">
+            <h2 className="text-2xl text-secondary md:text-4xl lg:text-5xl italic font-bold leading-tight text-foreground mb-6">
               {post.title}
-            </h1>
+            </h2>
               {/* Featured Image */}
             {post.thumbnail && (
               <div className="mx-auto w-full lg:-mb-18">

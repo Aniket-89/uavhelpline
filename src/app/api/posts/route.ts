@@ -15,7 +15,8 @@ export async function GET() {
   });
 
   const response = NextResponse.json(
-    posts.map((post) => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    posts.map((post: any) => ({
       ...post,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       categories: post.categories.map((c: any) => c.category),

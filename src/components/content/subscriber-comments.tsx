@@ -130,7 +130,7 @@ export function SubscriberComments() {
               key={index}
               onClick={() => goToSlide(index)}
               className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentSlide ? 'bg-red-500' : 'bg-gray-300'
+                index === currentSlide ? 'bg-blue-500' : 'bg-gray-300'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />

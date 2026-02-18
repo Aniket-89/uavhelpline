@@ -103,7 +103,7 @@ export default function PostCard({ post }: PostCardProps) {
   };
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 hover:border-primary/20 overflow-hidden">
+    <Card className="group border-none text-card-foreground gap-2 transition-all duration-300 hover:border-primary/20 overflow-hidden">
       {/* Image Header with Overlay */}
       <div className="relative overflow-hidden">
         <div className="aspect-video relative">
@@ -115,7 +115,7 @@ export default function PostCard({ post }: PostCardProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           {/* Status Badge */}
-          <div className="absolute top-3 left-3">
+          <div className="absolute top-3 left-3 flex gap-2">
             <Badge 
               variant={post.status === "published" ? "default" : "secondary"}
               className={`${
@@ -126,6 +126,9 @@ export default function PostCard({ post }: PostCardProps) {
             >
               {post.status === "published" ? "Published" : "Draft"}
             </Badge>
+            <Link href={`/admin/edit/${post.slug}?mode=edit`} className="flex items-center">
+                    <Edit3 className="mr-2 h-5 w-5 border-accent text-ring hover:bg-accent hover:text-primary bg-popover/70 border rounded-xs" />
+                  </Link>
           </div>
 
           {/* Quick Actions Overlay */}
@@ -178,9 +181,9 @@ export default function PostCard({ post }: PostCardProps) {
       </div>
 
       {/* Content */}
-      <CardHeader className="pb-3">
+      <CardHeader className="">
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-lg leading-tight hover:text-primary transition-colors">
+          <CardTitle className="text-md leading-tight hover:text-primary font-serif transition-colors line-clamp-3">
             <Link href={`/admin/edit/${post.slug}`}>
               {post.title}
             </Link>
@@ -188,8 +191,8 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
         
         {/* Categories */}
-        {post.categories && post.categories.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
+        {/* {post.categories && post.categories.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1">
             {post.categories.slice(0, 3).map((category) => (
               <Badge key={category.id} variant="outline" className="text-xs">
                 <Tag className="w-3 h-3 mr-1" />
@@ -202,16 +205,16 @@ export default function PostCard({ post }: PostCardProps) {
               </Badge>
             )}
           </div>
-        )}
+        )} */}
       </CardHeader>
 
       <CardContent className="pt-0">
-        <CardDescription className="text-sm leading-relaxed mb-4">
+        <CardDescription className="text-xs leading-relaxed mb-2">
           {getContentPreview(post.content)}
         </CardDescription>
 
         {/* Author & Meta Info */}
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
+        {/* <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
               <AvatarImage src="" />
@@ -222,7 +225,12 @@ export default function PostCard({ post }: PostCardProps) {
             <span className="font-medium">{post.author}</span>
           </div>
           
-          <div className="flex items-center gap-4">
+          
+        </div> */}
+      </CardContent>
+
+      <CardFooter className="pb-2 px-3 text-xs text-muted-foreground">
+      <div className="flex items-center gap-4">
             {post.publishedAt && (
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
@@ -236,24 +244,6 @@ export default function PostCard({ post }: PostCardProps) {
               </div>
             )}
           </div>
-        </div>
-      </CardContent>
-
-      <CardFooter className="pt-0">
-        <div className="flex gap-2 w-full">
-          <Button asChild variant="outline" size="sm" className="flex-1">
-            <Link href={`/admin/edit/${post.slug}`}>
-              <Eye className="w-4 h-4 mr-2" />
-              Preview
-            </Link>
-          </Button>
-          <Button asChild size="sm" className="flex-1">
-            <Link href={`/admin/edit/${post.slug}?mode=edit`}>
-              <Edit3 className="w-4 h-4 mr-2" />
-              Edit
-            </Link>
-          </Button>
-        </div>
       </CardFooter>
     </Card>
   );

@@ -24,12 +24,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import TiptapEditor from "@/components/dashboard/tiptap";
 import { TipTapContent } from "@/lib/utils/tiptap-renderer";
-import { 
-  ArrowLeft, 
-  Eye, 
-  Edit3, 
-  Save, 
-  Trash2, 
+import {
+  ArrowLeft,
+  Eye,
+  Edit3,
+  Save,
+  Trash2,
   Calendar,
   User,
   Tag,
@@ -37,7 +37,8 @@ import {
   FileText,
   Clock,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Settings
 } from "lucide-react";
 import Link from "next/link";
 import type { Post, PostStatus } from "@/types";
@@ -47,12 +48,12 @@ export default function EditPost() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const mode = searchParams.get('mode') || 'preview';
-  
+
   const { data: post, isLoading, error } = usePost(slug as string);
   const updatePost = useUpdatePost();
   const deletePost = useDeletePost();
   const updatePostStatus = useUpdatePostStatus();
-  
+
   // Edit form state
   const [isEditing, setIsEditing] = useState(mode === 'edit');
   const [title, setTitle] = useState("");
@@ -64,17 +65,60 @@ export default function EditPost() {
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
 
-  // Initialize form when post loads
+  // Thumbnail state
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
+  const [existingThumbnail, setExistingThumbnail] = useState<string>("");
+
+  // when post loads, seed the existing thumbnail and a placeholder if empty
   useEffect(() => {
-    if (post) {
-      setTitle(post.title);
-      setEditSlug(post.slug);
-      setStatus(post.status);
-      setContent(post.content);
-      setSelectedCategories(post.categories?.map(cat => cat.id) || []);
-      setAuthor(post.author);
-    }
+    if (!post) return;
+    setExistingThumbnail(post.thumbnail || "");
   }, [post]);
+
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setThumbnailFile(file);
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setThumbnailPreview(String(ev.target?.result || ""));
+    };
+    reader.readAsDataURL(file); // preview as base64; replace with your uploader if needed
+  };
+
+  const handleRemoveThumbnail = () => {
+    setThumbnailFile(null);
+    setThumbnailPreview("");
+    setExistingThumbnail(""); // clearing existing
+  };
+
+  // Initialize form when post loads
+
+
+
+  // normalize once when post loads
+  useEffect(() => {
+    if (!post) return;
+
+    setTitle(post.title);
+    setEditSlug(post.slug);
+    setStatus(post.status);
+
+    const parsed =
+      typeof post.content === "string" ? JSON.parse(post.content) : post.content;
+
+    // Fallback to a minimal empty doc if DB has null/undefined
+    const defaultDoc = { type: "doc", content: [{ type: "paragraph" }] };
+    setContent(parsed ?? defaultDoc);
+
+    setSelectedCategories(post.categories?.map((c) => c.id) || []);
+    setAuthor(post.author);
+  }, [post]);
+
+  const isContentReady = !!content; // after the effect above, always true
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -91,33 +135,31 @@ export default function EditPost() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      // If you have an upload API, upload thumbnailFile and set thumbnailToSave = returned URL
+      const thumbnailToSave = thumbnailPreview || existingThumbnail || "";
+
       const postData = {
         title: title.trim(),
         slug: editSlug,
         status,
         content,
         author,
-        categoryIds: selectedCategories
+        categoryIds: selectedCategories,
+        thumbnail: thumbnailToSave, // <-- important
       };
 
-      await updatePost.mutateAsync({ 
-        slug: slug as string, 
-        postData 
-      });
-      
+      await updatePost.mutateAsync({ slug: slug as string, postData });
       alert("Post saved successfully!");
-      
-      // If slug changed, redirect to new URL
-      if (editSlug !== slug) {
-        router.push(`/admin/edit/${editSlug}`);
-      }
-    } catch (error) {
-      console.error("Error saving post:", error);
+      if (editSlug !== slug) router.push(`/admin/edit/${editSlug}`);
+    } catch (e) {
+      console.error(e);
       alert("Failed to save post. Please try again.");
     } finally {
       setIsSaving(false);
     }
   };
+
+
 
   const handleDelete = async () => {
     try {
@@ -131,8 +173,8 @@ export default function EditPost() {
   };
 
   const handleCategoryToggle = (categoryId: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(categoryId) 
+    setSelectedCategories(prev =>
+      prev.includes(categoryId)
         ? prev.filter(id => id !== categoryId)
         : [...prev, categoryId]
     );
@@ -188,9 +230,12 @@ export default function EditPost() {
       </div>
     );
   }
+  // Helper
+  const safeContent =
+    typeof post.content === "string" ? JSON.parse(post.content) : post.content;
 
   return (
-    <div className="container mx-auto px-6 py-8 max-w-6xl">
+    <div className="container mx-auto px-6 py-8 max-w-8xl">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
@@ -200,37 +245,16 @@ export default function EditPost() {
               Back to Posts
             </Link>
           </Button>
-          {/* <div>
-            <h1 className="text-2xl font-bold">{post.title}</h1>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-              <div className="flex items-center gap-1">
-                <User className="w-4 h-4" />
-                {post.author}
-              </div>
-              {post.publishedAt && (
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  Published {formatDate(post.publishedAt)}
-                </div>
-              )}
-              {post.draftedAt && !post.publishedAt && (
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  Draft from {formatDate(post.draftedAt)}
-                </div>
-              )}
-            </div>
-          </div> */}
+
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge 
+          <Badge
             variant={post.status === "published" ? "default" : "secondary"}
-            className={`${
-              post.status === "published" 
-                ? "bg-green-600 hover:bg-green-700" 
-                : "bg-orange-600 hover:bg-orange-700"
-            } text-white`}
+            className={`${post.status === "published"
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-gray-600 hover:bg-gray-700"
+              } text-white text-sm rounded-xs py-1`}
           >
             {post.status === "published" ? (
               <CheckCircle className="w-3 h-3 mr-1" />
@@ -241,7 +265,7 @@ export default function EditPost() {
           </Badge>
 
           <Button
-            variant={isEditing ? "default" : "outline"}
+            variant={isEditing ? "secondary" : "outline"}
             size="sm"
             onClick={() => setIsEditing(!isEditing)}
           >
@@ -296,7 +320,7 @@ export default function EditPost() {
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
+              <Button variant="destructive" size="sm" className="">
                 <Trash2 className="w-4 h-4" />
               </Button>
             </AlertDialogTrigger>
@@ -321,17 +345,20 @@ export default function EditPost() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-6">
+
           {isEditing ? (
+
             /* Edit Mode */
-            <Card>
-              <CardHeader>
-                <CardTitle>Edit Post</CardTitle>
+            <Card className="border-none">
+              <CardHeader className="text-2xl font-serif mt-4 ">
+                <CardTitle>EDIT POST</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">Title</label>
+                  <label className="block text-lg font-medium mb-2">TITLE</label>
                   <Input
+                    className="bg-input"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Post title..."
@@ -340,8 +367,9 @@ export default function EditPost() {
 
                 {/* Slug */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">Slug</label>
+                  <label className="block text-lg font-medium mb-2 ">SLUG</label>
                   <Input
+                    className="bg-input"
                     value={editSlug}
                     onChange={(e) => setEditSlug(e.target.value)}
                     placeholder="post-slug"
@@ -350,52 +378,32 @@ export default function EditPost() {
 
                 {/* Author */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">Author</label>
+                  <label className="block text-lg font-medium mb-2">AUTHOR</label>
                   <Input
+                    className="bg-input"
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
                     placeholder="Author name..."
                   />
                 </div>
 
-                {/* Status */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">Status</label>
-                  <div className="flex gap-4">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="status"
-                        value="draft"
-                        checked={status === "draft"}
-                        onChange={(e) => setStatus(e.target.value as PostStatus)}
-                        className="mr-2"
-                      />
-                      Draft
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="status"
-                        value="published"
-                        checked={status === "published"}
-                        onChange={(e) => setStatus(e.target.value as PostStatus)}
-                        className="mr-2"
-                      />
-                      Published
-                    </label>
-                  </div>
-                </div>
 
                 {/* Content Editor */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">Content</label>
-                  <TiptapEditor 
-                    onChange={setContent}
-                    initialContent={content}
-                    placeholder="Edit your UAV/drone content here..."
-                    characterLimit={15000}
-                  />
+                  <label className="block text-lg font-bold mb-2">CONTENT</label>
+
+                  {/* Gate the editor so it mounts only when content is ready */}
+                  {!isContentReady ? (
+                    <div className="h-64 rounded-md border animate-pulse bg-muted/40" />
+                  ) : (
+                    <TiptapEditor
+                      key={`${slug}-${post?.updatedAt ?? ""}`} // force re-init if post changes
+                      onChange={setContent}
+                      initialContent={content}
+                      placeholder="Edit your UAV/drone content here..."
+                      characterLimit={15000}
+                    />
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -403,42 +411,41 @@ export default function EditPost() {
             /* Preview Mode */
             <div className="space-y-6">
               {/* Featured Image */}
-              {post.thumbnail && (
-                <div className="aspect-video relative overflow-hidden rounded-lg">
-                  <img 
-                    src={post.thumbnail} 
-                    alt={post.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
 
-          <div>
-            <h1 className="text-2xl font-bold">{post.title}</h1>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-              <div className="flex items-center gap-1">
-                <User className="w-4 h-4" />
-                {post.author}
+              <div className="aspect-video relative overflow-hidden rounded-xs">
+                <img
+                  src={post.thumbnail || "/placeholder-640x480.png"}
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
-              {post.publishedAt && (
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  Published {formatDate(post.publishedAt)}
+
+              <div>
+                <h1 className="text-2xl font-semibold">{post.title}</h1>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                  <div className="flex items-center gap-1">
+                    <User className="w-4 h-4" />
+                    {post.author}
+                  </div>
+                  {post.publishedAt && (
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      Published {formatDate(post.publishedAt)}
+                    </div>
+                  )}
+                  {post.draftedAt && !post.publishedAt && (
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      Draft from {formatDate(post.draftedAt)}
+                    </div>
+                  )}
                 </div>
-              )}
-              {post.draftedAt && !post.publishedAt && (
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  Draft from {formatDate(post.draftedAt)}
-                </div>
-              )}
-            </div>
-          </div>
+              </div>
 
               {/* Content */}
               <Card>
-                <CardContent className="pt-6">
-                  <TipTapContent content={post.content} />
+                <CardContent className="pt-6 px-6">
+                  <TipTapContent content={safeContent} />
                 </CardContent>
               </Card>
             </div>
@@ -447,27 +454,88 @@ export default function EditPost() {
 
         {/* Sidebar */}
         <div className="lg:col-span-1 space-y-6">
+
+
+
+          {/* Thumbnail (Edit) */}
+          {isEditing && (
+            <Card className="bg-white gap-2">
+              <CardHeader className="bg-popover">
+                <CardTitle>
+                  <label htmlFor="thumbnail" className="block text-popover-foreground font-serif text-lg font-bold">
+                    FEATURED IMAGE
+                  </label>
+                </CardTitle>
+              </CardHeader>
+
+              <div className="space-y-1">
+                <Input
+                  id="thumbnail"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleThumbnailChange}
+                  className="  border-none shadow-none file:mr-4 file:py-2 file:px-4 file:rounded-xs file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                />
+
+                {/* Preview (new upload OR existing) */}
+                {(thumbnailPreview || existingThumbnail) ? (
+                  <div className="relative">
+                    <img
+                      src={thumbnailPreview || existingThumbnail}
+                      alt="Thumbnail preview"
+                      className="w-11/12 mx-auto max-w-md aspect-video object-cover rounded-xs border"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-2 right-2"
+                      onClick={handleRemoveThumbnail}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="relative w-full max-w-md">
+                    <img
+                      src="/placeholder-640x480.png"
+                      alt="Placeholder"
+                      className="w-full aspect-video object-cover rounded-xs border"
+                    />
+                  </div>
+                )}
+
+                <p className="text-xs text-destructive ml-2">
+                  Recommended size: 1920×1080px
+                </p>
+                <p className="text-xs text-destructive ml-2">
+                  Max size: 30mb*
+                </p>
+              </div>
+            </Card>
+          )}
+
           {/* Categories */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium flex items-center">
+          <Card className="bg-white">
+            <CardHeader className="bg-popover">
+              <CardTitle className="text-md font-bold flex items-center text-popover-foreground">
                 <Tag className="w-4 h-4 mr-2" />
                 Categories
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="">
               {isEditing ? (
                 <CategorySelector
                   selectedCategories={selectedCategories}
                   onCategoryToggle={handleCategoryToggle}
                 />
               ) : (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 pb-3">
                   {post.categories && post.categories.length > 0 ? (
                     post.categories.map((category) => (
                       <Badge key={category.id} variant="outline" className="text-xs">
                         <Tag className="w-3 h-3 mr-1" />
-                        {category.name}
+                        {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
                       </Badge>
                     ))
                   ) : (
@@ -479,34 +547,34 @@ export default function EditPost() {
           </Card>
 
           {/* Publishing Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium flex items-center">
+          <Card className="pb-2 bg-white">
+            <CardHeader className="bg-popover">
+              <CardTitle className="text-md font-bold flex items-center text-popover-foreground">
                 <Globe className="w-4 h-4 mr-2" />
                 Publishing
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Status:</span>
-                <Badge 
+                <span className="text-muted-foreground font-bold">Status:</span>
+                <Badge
                   variant={post.status === "published" ? "default" : "secondary"}
                   className="text-xs"
                 >
                   {post.status}
                 </Badge>
               </div>
-              
+
               {post.publishedAt && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Published:</span>
+                  <span className="text-muted-foreground font-bold">Published:</span>
                   <span>{formatDate(post.publishedAt)}</span>
                 </div>
               )}
-              
+
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Last Modified:</span>
-                <span>{formatDate(post.updatedAt)}</span>
+                <span className="text-muted-foreground font-bold">Last Modified:</span>
+                <span className="text-right">{formatDate(post.updatedAt)}</span>
               </div>
 
               <Separator />
@@ -528,18 +596,21 @@ export default function EditPost() {
 
           {/* Actions */}
           {!isEditing && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
+            <Card className="pb-2">
+              <CardHeader className="bg-popover">
+                <CardTitle className="text-md font-bold flex items-center text-popover-foreground">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Quick Actions
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <Button size="sm" className="w-full" onClick={() => setIsEditing(true)}>
                   <Edit3 className="w-4 h-4 mr-2" />
                   Edit Post
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="w-full"
                   onClick={handlePublishToggle}
                   disabled={isPublishing}
@@ -557,7 +628,7 @@ export default function EditPost() {
                   )}
                 </Button>
                 <Button variant="outline" size="sm" className="w-full" asChild>
-                  <Link href={`/posts/${post.slug}`} target="_blank">
+                  <Link href={`/stories/${post.slug}`} target="_blank">
                     <Globe className="w-4 h-4 mr-2" />
                     View Live
                   </Link>

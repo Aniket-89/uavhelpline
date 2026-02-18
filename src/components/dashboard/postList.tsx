@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import { Separator } from "../ui/separator";
 
 export default function PostList() {
   const { data: posts = [], isLoading, error } = usePosts();
@@ -87,7 +88,7 @@ export default function PostList() {
       </div>
 
       {/* Filters and Search */}
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+      <div className="max-w-5xl flex flex-col font-sans lg:flex-row gap-4 items-start lg:items-center justify-between">
         <div className="flex flex-col sm:flex-row gap-4 flex-1">
           {/* Search */}
           <div className="relative flex-1 min-w-[300px]">
@@ -96,7 +97,7 @@ export default function PostList() {
               placeholder="Search posts by title or author..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-white"
             />
           </div>
 
@@ -104,7 +105,7 @@ export default function PostList() {
           <select 
             value={statusFilter} 
             onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="h-9 w-[140px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+            className="h-9 w-[140px] rounded-xs border border-input bg-white px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
           >
             <option value="all">All Status</option>
             <option value="published">Published</option>
@@ -115,7 +116,7 @@ export default function PostList() {
           <select 
             value={categoryFilter} 
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="h-9 w-[160px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+            className="h-9 w-[160px] rounded-xs border border-input bg-white px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
           >
             <option value="all">All Categories</option>
             {categories.map((category) => (
@@ -136,7 +137,7 @@ export default function PostList() {
             {sortOrder === "desc" ? <SortDesc className="w-4 h-4" /> : <SortAsc className="w-4 h-4" />}
           </Button>
           
-          <div className="flex border rounded-md">
+          <div className="flex border rounded-xs">
             <Button
               variant={viewMode === "grid" ? "default" : "ghost"}
               size="sm"
@@ -171,6 +172,8 @@ export default function PostList() {
           </>
         )}
       </div>
+      <Separator/>
+      
 
       {/* Posts Grid/List */}
       {filteredPosts.length === 0 ? (
@@ -200,7 +203,7 @@ export default function PostList() {
       ) : (
         <div className={
           viewMode === "grid" 
-            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
             : "space-y-4"
         }>
           {filteredPosts.map((post: Post) => (

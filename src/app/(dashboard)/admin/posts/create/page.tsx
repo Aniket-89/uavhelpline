@@ -7,6 +7,7 @@ import CategorySelector from "@/components/CategorySelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PostStatus } from "@/types";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function CreatePost() {
     const router = useRouter();
@@ -107,7 +108,9 @@ export default function CreatePost() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="container mx-auto px-6 py-8 max-w-8xl grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div className="col-span-3">
+
             <div className="mb-6">
                 <h1 className="text-2xl font-bold mb-2">Create New Post</h1>
                 <p className="text-gray-600">Fill in the details below to create a new post</p>
@@ -116,7 +119,7 @@ export default function CreatePost() {
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Title */}
                 <div>
-                    <label htmlFor="title" className="block text-sm font-medium mb-2">
+                    <label htmlFor="title" className="block text-lg font-bold mb-2">
                         Title *
                     </label>
                     <Input
@@ -131,7 +134,7 @@ export default function CreatePost() {
 
                 {/* Slug */}
                 <div>
-                    <label htmlFor="slug" className="block text-sm font-medium mb-2">
+                    <label htmlFor="slug" className="block text-lg font-bold mb-2">
                         Slug
                     </label>
                     <Input
@@ -141,12 +144,12 @@ export default function CreatePost() {
                         onChange={(e) => setSlug(e.target.value)}
                         placeholder="auto-generated-from-title"
                     />
-                    <p className="text-xs text-gray-500 mt-1">URL-friendly version of the title</p>
+                    <p className="text-xs text-ring mt-1">URL-friendly version of the title</p>
                 </div>
 
                 {/* Author */}
                 <div>
-                    <label htmlFor="author" className="block text-sm font-medium mb-2">
+                    <label htmlFor="author" className="block text-lg font-bold mb-2">
                         Author *
                     </label>
                     <Input
@@ -159,47 +162,9 @@ export default function CreatePost() {
                     />
                 </div>
 
-                {/* Thumbnail Upload */}
-                <div>
-                    <label htmlFor="thumbnail" className="block text-sm font-medium mb-2">
-                        Featured Image (Thumbnail)
-                    </label>
-                    <div className="space-y-4">
-                        <Input
-                            id="thumbnail"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleThumbnailChange}
-                            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                        />
-                        {thumbnailPreview && (
-                            <div className="relative">
-                                <img 
-                                    src={thumbnailPreview} 
-                                    alt="Thumbnail preview" 
-                                    className="w-full max-w-md h-48 object-cover rounded-lg border"
-                                />
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="sm"
-                                    className="absolute top-2 right-2"
-                                    onClick={() => {
-                                        setThumbnail(null);
-                                        setThumbnailPreview("");
-                                    }}
-                                >
-                                    Remove
-                                </Button>
-                            </div>
-                        )}
-                        <p className="text-xs text-gray-500">
-                            Upload a featured image for your post. Recommended size: 1200x630px
-                        </p>
-                    </div>
-                </div>
+                
 
-                {/* Status */}
+                {/* Status
                 <div>
                     <label className="block text-sm font-medium mb-2">
                         Status *
@@ -228,22 +193,13 @@ export default function CreatePost() {
                             Published
                         </label>
                     </div>
-                </div>
+                </div> */}
 
-                {/* Categories */}
-                <div>
-                    <label className="block text-sm font-medium mb-2">
-                        Categories
-                    </label>
-                    <CategorySelector
-                        selectedCategories={selectedCategories}
-                        onCategoryToggle={handleCategoryToggle}
-                    />
-                </div>
+                
 
                 {/* Content Editor */}
                 <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-lg font-bold mb-2">
                         Content *
                     </label>
                     <TiptapEditor 
@@ -272,6 +228,72 @@ export default function CreatePost() {
                     </Button>
                 </div>
             </form>
+            </div>
+            <div className="col-span-1 space-y-4">
+                {/* Thumbnail Upload */}
+
+                <Card className="bg-white min-h-64">
+                    <CardHeader className="font-sans bg-popover shadow-b-md">
+
+                    <label htmlFor="thumbnail" className="block text-lg font-serif font-bold">
+                        Featured Image (Thumbnail)
+                    </label>
+                    </CardHeader>
+                    <CardContent>
+
+                    <div className="space-y-4">
+                        <Input
+                            id="thumbnail"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleThumbnailChange}
+                            className="file:mr-4 file:py-2 file:px-4 file:rounded-xs file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                            />
+                        {thumbnailPreview && (
+                            <div className="relative">
+                                <img 
+                                    src={thumbnailPreview} 
+                                    alt="Thumbnail preview" 
+                                    className="w-full max-w-md h-48 object-cover rounded-xs border"
+                                    />
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    size="sm"
+                                    className="absolute top-2 right-2"
+                                    onClick={() => {
+                                        setThumbnail(null);
+                                        setThumbnailPreview("");
+                                    }}
+                                    >
+                                    Remove
+                                </Button>
+                            </div>
+                        )}
+                        <p className="text-xs text-gray-500">
+                            Upload a featured image for your post. Recommended size: 1200x630px
+                        </p>
+                    </div>
+                        </CardContent>
+                </Card>
+            {/* Categories */}
+                <Card className="bg-white">
+                    <CardHeader className="font-serif bg-popover">
+
+                    <label className="block text-lg font-bold">
+                        Categories
+                    </label>
+                    </CardHeader>
+                    <CardContent>
+
+                    <CategorySelector
+                        selectedCategories={selectedCategories}
+                        onCategoryToggle={handleCategoryToggle}
+                        />
+                        </CardContent>
+                </Card>
+            </div>
+
         </div>
     );
 }

@@ -137,7 +137,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
   );
 
   return (
-    <div className="border-b bg-muted/30 p-2">
+    <div className="border-b bg-muted p-2">
       <div className="flex flex-wrap items-center gap-1">
         {/* Text Formatting */}
         <div className="flex items-center">
@@ -440,7 +440,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
     editable: true,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none min-h-[300px] p-6 bg-background',
+        class: 'prose post-content prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none min-h-[300px] p-6 bg-white',
       },
     },
     onUpdate: ({ editor }) => {
@@ -454,7 +454,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   const characterPercentage = (characterCount / characterLimit) * 100;
 
   return (
-    <div className="border rounded-lg shadow-sm bg-background overflow-hidden">
+    <div className="border rounded-xs shadow-sm bg-background overflow-hidden">
       <MenuBar editor={editor} />
       
       <div className="relative">

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { X, SearchCheckIcon, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
@@ -11,16 +12,16 @@ export default function Header() {
     const [lastScrollY, setLastScrollY] = useState(0);
     const [isSidebarActive, setIsSidebarActive] = useState(false);
     const pathname = usePathname();
-    
+
     const isHomePage = pathname === "/";
 
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-            
+
             // Determine if scrolled
             setIsScrolled(currentScrollY > 50);
-            
+
             // Determine header visibility based on scroll direction
             if (currentScrollY > lastScrollY && currentScrollY > 100) {
                 // Scrolling down & past threshold - hide header
@@ -29,7 +30,7 @@ export default function Header() {
                 // Scrolling up or at top - show header
                 setIsHeaderVisible(true);
             }
-            
+
             setLastScrollY(currentScrollY);
         };
 
@@ -46,35 +47,47 @@ export default function Header() {
         fixed top-0 left-0 right-0 z-50 
         transition-all duration-300 ease-in-out
         ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full'}
-        ${isHomePage && !isScrolled 
-            ? 'bg-transparent backdrop-blur-none' 
+        ${isHomePage && !isScrolled
+            ? 'bg-transparent backdrop-blur-none'
             : 'bg-muted border-b-[0.5px] border-border/60'
         }
         ${isScrolled ? 'py-2' : 'py-4'}
     `;
 
-    const logoClasses = `
-        font-bold font-sans text-nowrap transition-all duration-300 ease-in-out
-        ${isHomePage && !isScrolled 
-            ? 'text-6xl md:text-7xl text-primary drop-shadow-lg' 
+    const logoTextClasses = `
+        font-semibold font-serif text-nowrap transition-all duration-300 ease-in-out
+        ${isHomePage && !isScrolled
+            ? 'text-6xl md:text-6xl text-[#0B1E60] drop-shadow-md'
             : 'text-lg md:text-2xl text-foreground'
         }
     `;
 
+    const logoImageSize = isHomePage && !isScrolled ? 64 : 36;
+
     return <div className={headerClasses}>
         <nav className="flex justify-between items-center max-w-screen-xl mx-auto px-3">
-            <Link href={"/"} className={logoClasses}>
-                UAV Helpline
+            <Link href={"/"} className="flex items-center gap-2 transition-all duration-300 ease-in-out">
+                <Image
+                    src="/logo.png"
+                    alt="UAV Helpline logo"
+                    width={logoImageSize}
+                    height={logoImageSize}
+                    className="transition-all duration-300 ease-in-out"
+                    priority
+                />
+                <span className={logoTextClasses}>
+                    UAV Helpline
+                </span>
             </Link>
             <div className="flex items-center gap-4">
-                <Button 
-                    variant={'outline'} 
+                <Button
+                    variant={'outline'}
                     onClick={() => setIsSidebarActive(true)}
                 >
-                    <SearchCheckIcon className="w-4 h-4"/>
+                    <SearchCheckIcon className="w-4 h-4" />
                     Explore
                 </Button>
-                <Button  className="hidden md:block">
+                <Button className="hidden md:block">
                     Subscribe
                 </Button>
             </div>
@@ -96,13 +109,13 @@ export default function Header() {
                         </button>
                     </div>
 
-                    
+
                     <nav className="space-y-4">
                         <h3 className="text-lg font-semibold text-gray-900 mb-6 font-headline">Explore</h3>
                         <ul className="space-y-3 font-headline">
                             <li>
-                                <Link 
-                                    href="/stories" 
+                                <Link
+                                    href="/stories"
                                     className="block py-2 px-3 font-headline hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
                                     onClick={() => setIsSidebarActive(false)}
                                 >
@@ -110,8 +123,8 @@ export default function Header() {
                                 </Link>
                             </li>
                             <li>
-                                <Link 
-                                    href="/stories?category=guides" 
+                                <Link
+                                    href="/stories?category=guides"
                                     className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors font-headline"
                                     onClick={() => setIsSidebarActive(false)}
                                 >
@@ -119,8 +132,8 @@ export default function Header() {
                                 </Link>
                             </li>
                             <li>
-                                <Link 
-                                    href="/stories?category=reviews" 
+                                <Link
+                                    href="/stories?category=reviews"
                                     className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors font-headline"
                                     onClick={() => setIsSidebarActive(false)}
                                 >
@@ -128,8 +141,8 @@ export default function Header() {
                                 </Link>
                             </li>
                             <li>
-                                <Link 
-                                    href="/stories?category=technology" 
+                                <Link
+                                    href="/stories?category=technology"
                                     className="block py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors font-headline"
                                     onClick={() => setIsSidebarActive(false)}
                                 >
@@ -143,12 +156,12 @@ export default function Header() {
 
             {/* Overlay */}
             {isSidebarActive && (
-                <div 
+                <div
                     className="fixed inset-0 z-[55]"
                     onClick={() => setIsSidebarActive(false)}
                 />
             )}
-            
+
         </nav>
     </div>
 }

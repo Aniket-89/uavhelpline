@@ -14,12 +14,12 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Home",
+    title: "Posts",
     url: "/admin/posts/",
     icon: Home,
   },
   {
-    title: "Create new",
+    title: "Create",
     url: "/admin/posts/create",
     icon: PlusCircleIcon,
   },
@@ -27,11 +27,6 @@ const items = [
     title: "Calendar",
     url: "#",
     icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
   },
   {
     title: "Settings",
@@ -42,10 +37,10 @@ const items = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar className="text-popover">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-3xl font-bold">UAV Helpline</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-3xl font-bold text-white mb-3">UAV Helpline</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

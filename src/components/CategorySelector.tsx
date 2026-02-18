@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useCategories, useCreateCategory } from "@/hooks/useCategories";
-import { Plus, X, Tag, Loader2 } from "lucide-react";
+import { Plus, X, Tag, Loader2, Search } from "lucide-react";
 import type { Category } from "@/types";
 
 interface CategorySelectorProps {
@@ -13,52 +13,60 @@ interface CategorySelectorProps {
   className?: string;
 }
 
-export default function CategorySelector({ 
-  selectedCategories, 
-  onCategoryToggle, 
-  className = "" 
+export default function CategorySelector({
+  selectedCategories,
+  onCategoryToggle,
+  className = "",
 }: CategorySelectorProps) {
   const { data: categories = [], isLoading } = useCategories();
   const createCategory = useCreateCategory();
-  
+
+  const [query, setQuery] = useState("");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const handleCreateCategory = async () => {
-    if (!newCategoryName.trim()) return;
+  const norm = (s: string) => s.toLowerCase().trim();
 
-    // Check if category with same name already exists locally
-    const existingCategory = categories.find(
-      cat => cat.name.toLowerCase() === newCategoryName.trim().toLowerCase()
-    );
-    
-    if (existingCategory) {
-      alert(`Category "${existingCategory.name}" already exists. Please choose a different name.`);
+  const filtered = useMemo(() => {
+    const q = norm(query);
+    if (!q) return categories;
+    return categories.filter((c) => norm(c.name).includes(q));
+  }, [categories, query]);
+
+  // Keep selected categories pinned to the top of the filtered list
+  const filteredSorted = useMemo(() => {
+    const set = new Set(selectedCategories);
+    return [...filtered].sort((a, b) => {
+      const aSel = set.has(a.id) ? 0 : 1;
+      const bSel = set.has(b.id) ? 0 : 1;
+      if (aSel !== bSel) return aSel - bSel;
+      return a.name.localeCompare(b.name);
+    });
+  }, [filtered, selectedCategories]);
+
+  const handleCreateCategory = async () => {
+    const name = newCategoryName.trim();
+    if (!name) return;
+
+    // Prevent duplicate (client-side)
+    const exists = categories.find((c) => norm(c.name) === norm(name));
+    if (exists) {
+      alert(`Category "${exists.name}" already exists.`);
       return;
     }
 
     setIsCreating(true);
     try {
-      const newCategory = await createCategory.mutateAsync({
-        name: newCategoryName.trim()
-      });
-      
-      // Automatically select the newly created category
-      onCategoryToggle(newCategory.id);
-      
-      // Reset form
+      const created = await createCategory.mutateAsync({ name });
+      onCategoryToggle(created.id); // auto-select
       setNewCategoryName("");
       setShowCreateForm(false);
-      
-      // Show success message
-      alert(`Category "${newCategory.name}" created successfully!`);
-    } catch (error: any) {
-      console.error("Error creating category:", error);
-      
-      // Handle specific error messages
-      if (error.response?.data?.error?.includes("already exists")) {
-        alert("A category with this name already exists. Please choose a different name.");
+      alert(`Category "${created.name}" created.`);
+    } catch (e: any) {
+      console.error(e);
+      if (e?.response?.data?.error?.includes("already exists")) {
+        alert("This category already exists.");
       } else {
         alert("Failed to create category. Please try again.");
       }
@@ -67,20 +75,21 @@ export default function CategorySelector({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+  const handleCreateKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleCreateCategory();
     }
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       setShowCreateForm(false);
       setNewCategoryName("");
     }
   };
 
-  const getSelectedCategoriesData = () => {
-    return categories.filter(cat => selectedCategories.includes(cat.id));
-  };
+  const selectedData = useMemo(
+    () => categories.filter((c) => selectedCategories.includes(c.id)),
+    [categories, selectedCategories]
+  );
 
   if (isLoading) {
     return (
@@ -94,16 +103,16 @@ export default function CategorySelector({
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      {/* Selected Categories Display */}
-      {selectedCategories.length > 0 && (
+    <div className={`space-y-3 ${className} font-sans`}>
+      {/* Selected chips */}
+      {selectedData.length > 0 && (
         <div>
           <label className="block text-sm font-medium mb-2">Selected Categories</label>
           <div className="flex flex-wrap gap-2">
-            {getSelectedCategoriesData().map((category) => (
-              <Badge 
-                key={category.id} 
-                variant="default" 
+            {selectedData.map((category) => (
+              <Badge
+                key={category.id}
+                variant="outline"
                 className="flex items-center gap-1 pr-1"
               >
                 <Tag className="w-3 h-3" />
@@ -121,17 +130,17 @@ export default function CategorySelector({
         </div>
       )}
 
-      {/* Available Categories */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium">
-            Available Categories ({categories.length})
+      {/* Search + actions */}
+      <div className="space-y-2 ">
+        <div className="flex items-center justify-between">
+          <label className="block text-sm font-bold">
+            Categories {query ? `(filtered ${filtered.length})` : `(${categories.length})`}
           </label>
           <Button
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => setShowCreateForm(!showCreateForm)}
+            onClick={() => setShowCreateForm((s) => !s)}
             className="h-7 px-2 text-xs"
           >
             <Plus className="w-3 h-3 mr-1" />
@@ -139,95 +148,108 @@ export default function CategorySelector({
           </Button>
         </div>
 
-        {/* Create New Category Form */}
-        {showCreateForm && (
-          <div className="mb-3 p-3 border rounded-md bg-muted/30">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Enter category name..."
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                onKeyDown={handleKeyPress}
-                className="flex-1 h-8 text-sm"
-                disabled={isCreating}
-              />
-              <Button
-                type="button"
-                onClick={handleCreateCategory}
-                disabled={!newCategoryName.trim() || isCreating}
-                size="sm"
-                className="h-8 px-3"
-              >
-                {isCreating ? (
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                ) : (
-                  <Plus className="w-3 h-3" />
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setShowCreateForm(false);
-                  setNewCategoryName("");
-                }}
-                size="sm"
-                className="h-8 px-3"
-              >
-                <X className="w-3 h-3" />
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Press Enter to create, Escape to cancel
-            </p>
-          </div>
-        )}
-
-        {/* Category Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto border rounded-md p-3">
-          {categories.map((category) => {
-            const isSelected = selectedCategories.includes(category.id);
-            return (
-              <label 
-                key={category.id} 
-                className={`flex items-center text-sm p-2 rounded cursor-pointer transition-colors hover:bg-muted/50 ${
-                  isSelected ? 'bg-primary/10 border border-primary/20' : ''
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  onChange={() => onCategoryToggle(category.id)}
-                  className="mr-2"
-                />
-                <Tag className="w-3 h-3 mr-1 opacity-60" />
-                <span className={isSelected ? 'font-medium' : ''}>{category.name}</span>
-              </label>
-            );
-          })}
-          
-          {categories.length === 0 && (
-            <div className="col-span-full text-center py-8">
-              <Tag className="w-8 h-8 mx-auto mb-2 opacity-40" />
-              <p className="text-sm text-muted-foreground mb-2">No categories yet</p>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setShowCreateForm(true)}
-              >
-                <Plus className="w-3 h-3 mr-1" />
-                Create First Category
-              </Button>
-            </div>
-          )}
+        <div className="relative">
+          <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 opacity-60" />
+          <Input
+            placeholder="Search categories…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="pl-8 h-9 bg-accent rounded-xs"
+          />
         </div>
       </div>
 
-      {/* Helper Text */}
+      {/* Create form */}
+      {showCreateForm && (
+        <div className="mb-1 p-3 border rounded-xs bg-muted/30">
+          <div className="flex gap-2">
+            <Input
+              placeholder="Enter category name…"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              onKeyDown={handleCreateKey}
+              className="flex-1 h-8 text-sm"
+              disabled={isCreating}
+            />
+            <Button
+              type="button"
+              onClick={handleCreateCategory}
+              disabled={!newCategoryName.trim() || isCreating}
+              size="sm"
+              className="h-8 px-3"
+            >
+              {isCreating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setShowCreateForm(false);
+                setNewCategoryName("");
+              }}
+              size="sm"
+              className="h-8 px-3"
+            >
+              <X className="w-3 h-3" />
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            Press Enter to create, Escape to cancel
+          </p>
+        </div>
+      )}
+
+      {/* Results list (search-driven) */}
+      <div className="max-h-42 overflow-y-auto border rounded-sm">
+        {filteredSorted.length > 0 ? (
+          <ul className="divide-y">
+            {filteredSorted.map((category) => {
+              const checked = selectedCategories.includes(category.id);
+              return (
+                <li key={category.id}>
+                  <label
+                    className={`flex text-sm items-center gap-2 px-3 py-2 cursor-pointer hover:bg-muted/50 transition-colors ${
+                      checked ? "bg-primary/10" : ""
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => onCategoryToggle(category.id)}
+                      className="shrink-0"
+                    />
+                    <span className={checked ? "font-medium" : ""}>{category.name}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <div className="p-6 text-center">
+            <Tag className="w-8 h-8 mx-auto mb-2 opacity-40" />
+            <p className="text-sm text-muted-foreground">
+              No categories match “{query}”.
+            </p>
+            <div className="mt-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setShowCreateForm(true);
+                  setNewCategoryName(query);
+                }}
+              >
+                <Plus className="w-3 h-3 mr-1" />
+                Create “{query}”
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="text-xs text-muted-foreground">
-        <p>• Select existing categories or create new ones</p>
-        <p>• New categories will be immediately available for selection</p>
+        <p>• Search to filter categories, or create a new one if not found.</p>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+export const runtime = 'nodejs'; // ensure NOT Edge Runtime
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/db/index";
 // import { authUser } from "@/lib/auth"; // custom middleware if needed
@@ -28,24 +29,38 @@ export async function GET() {
 
 // POST new post
 export async function POST(req: Request) {
-  //   const user = await authUser(); // optional
   const body = await req.json();
-
   const { title, slug, status, content, author, thumbnail, categoryIds = [] } = body;
+
+  // TipTap parsing
+  const { generateJSON } = await import("@tiptap/html");
+  const StarterKit = (await import("@tiptap/starter-kit")).default;
+  const tiptapJSON = typeof content === "string" ? generateJSON(content, [StarterKit]) : content;
+
+  // Ensure array of strings and dedupe
+  const ids = Array.isArray(categoryIds)
+    ? [...new Set(categoryIds.map(String).filter(Boolean))]
+    : [];
+
+  // (Optional but recommended) verify they exist to avoid silent no-ops
+  const existing = await prisma.category.findMany({
+    where: { id: { in: ids } },
+    select: { id: true },
+  });
+  const existingIds = new Set(existing.map(c => c.id));
 
   const postData: any = {
     title,
     slug,
     status,
-    content,
+    content: tiptapJSON,
     author,
     thumbnail,
+    // ✅ Explicit M2M: create PostCategory rows & connect the Category
     categories: {
-      create: Array.isArray(categoryIds) && categoryIds.length > 0 
-        ? categoryIds.map((id: string) => ({
-            category: { connect: { id } },
-          }))
-        : [],
+      create: ids
+        .filter(id => existingIds.has(id))
+        .map(id => ({ category: { connect: { id } } })),
     },
     publishedAt: status === "published" ? new Date() : null,
     draftedAt: status === "draft" ? new Date() : null,
@@ -53,7 +68,16 @@ export async function POST(req: Request) {
 
   const newPost = await prisma.post.create({
     data: postData,
+    include: {
+      // ✅ Include junction + category so you can see what got linked
+      categories: { include: { category: true } },
+    },
   });
 
-  return NextResponse.json(newPost);
+  // Flatten categories like your GET
+  return NextResponse.json({
+    ...newPost,
+    categories: newPost.categories.map(c => c.category),
+  });
 }
+

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
-@import url(https://db.onlinewebfonts.com/c/22aff4497483f2c6a5e001453850b935?family=Ivar+Text+Hydro+Regular); 
+@import url(https://db.onlinewebfonts.com/c/22aff4497483f2c6a5e001453850b935?family=Ivar+Text+Hydro+Regular);
 @import url(https://db.onlinewebfonts.com/c/34bf77357fafcf04d4061d4e19a32c85?family=Reckless+Bold);
 
 /* Custom Reckless Italic Font */
@@ -7,8 +7,8 @@
   font-family: 'Reckless Neue Medium Italic';
   src: url('/reckless-neue-medium-italic.eot');
   src: url('/reckless-neue-medium-italic.eot?#iefix') format('embedded-opentype'),
-       url('/reckless-neue-medium-italic.woff2') format('woff2'),
-       url('/reckless-neue-medium-italic.woff') format('woff');
+    url('/reckless-neue-medium-italic.woff2') format('woff2'),
+    url('/reckless-neue-medium-italic.woff') format('woff');
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -17,17 +17,22 @@
 /* Dotted HR Styling */
 hr {
   border: none;
-  border-top: 2px dotted rgb(209, 213, 219); /* gray-300 */
+  border-top: 2px dotted rgb(209, 213, 219);
+  /* gray-300 */
   margin: 2rem 0;
 }
 
 /* Hide scrollbar for horizontal sliders */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
 }
+
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
+  display: none;
+  /* Safari and Chrome */
 }
 
 @import "tailwindcss";
@@ -84,66 +89,102 @@ hr {
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1200px;
   --breakpoint-xxl: 1400px;
-  
+
   --font-headline: "Reckless Bold";
   --font-body: "Ivar Text Hydro Regular";
   --font-italic: "Reckless Neue Medium Italic";
-  
-  
-  /* Core UI Colors */
-  --background: rgb(247,242,242);  /* Dark teal background */
-  --foreground: #321f1fb8;
-  --card: oklch(0.97 0.01 240);  /* Very light teal background */
-  --card-foreground: oklch(0.20 0 0);  /* Dark gray text */
-  --popover: rgb(242,222,222);
-  --popover-foreground: #321f1fcc;
-  --primary: rgb(255,51,51);  /* Primary #133E87 */
-  --primary-foreground: oklch(0.98 0 0);  /* White text on primary */
-  --secondary: rgb(50,31,31);  /* Secondary #F3F3E0 cream */
-  --secondary-foreground: oklch(0.25 0 0);  /* Dark gray on cream */
-  --muted: rgb(238,231,231);  /* Light teal muted background */
-  --muted-foreground: oklch(0.50 0 0);  /* Medium gray text */
-  --accent: #eee7e7;  /* Same as primary */
-  --accent-foreground: rgb(154,137,137);
-  --destructive: oklch(0.55 0.18 15);  /* Red for errors */
-  --border: rgba(50, 31, 31, 0.1607843137);  /* Light teal borders */
-  --input: oklch(0.96 0.01 240);  /* Very light teal inputs */
-  --ring: oklch(0.28 0.15 240);  /* Primary accent for focus */
-  
-  /* Chart colors with primary accent and cream */
-  --chart-1: oklch(0.28 0.15 240);  /* Primary */
-  --chart-2: oklch(0.95 0.02 85);   /* Secondary cream */
-  --chart-3: oklch(0.40 0.08 240);  /* Medium teal */
-  --chart-4: oklch(0.60 0.04 240);  /* Light teal */
-  --chart-5: oklch(0.35 0 0);       /* Gray accent */
-  
+
+
+  /* Core UI Colors — built around #007bff */
+  --background: rgb(244, 248, 253);
+  /* Very light blue-white */
+  --foreground: #0d1f38b8;
+  /* Dark navy with alpha */
+  --card: oklch(0.97 0.01 260);
+  /* Very light blue surface */
+  --card-foreground: oklch(0.20 0 0);
+  /* Dark gray text */
+  --popover: rgb(224, 236, 252);
+  /* Light blue popover */
+  --popover-foreground: #0d1f38cc;
+  /* Dark navy with alpha */
+  --primary: #0071BC;
+  /* Primary blue */
+  --primary-foreground: oklch(0.98 0 0);
+  /* White text on primary */
+  --secondary: rgb(13, 31, 56);
+  /* Dark navy */
+  --secondary-foreground: oklch(0.97 0.01 260);
+  /* Light on navy */
+  --muted: rgb(230, 238, 248);
+  /* Light blue-gray muted */
+  --muted-foreground: oklch(0.50 0 0);
+  /* Medium gray text */
+  --accent: #dce6f6;
+  /* Light blue accent */
+  --accent-foreground: rgb(90, 130, 180);
+  /* Muted blue */
+  --destructive: oklch(0.55 0.18 15);
+  /* Red for errors */
+  --border: rgba(13, 31, 56, 0.16);
+  /* Navy borders with alpha */
+  --input: rgba(255, 255, 255, 1);
+  /* White inputs */
+  --ring: #007bff;
+  /* Primary blue for focus */
+
+  /* Chart colors */
+  --chart-1: oklch(0.57 0.22 260);
+  /* Primary #007bff */
+  --chart-2: oklch(0.92 0.03 260);
+  /* Light blue */
+  --chart-3: oklch(0.40 0.12 260);
+  /* Medium blue */
+  --chart-4: oklch(0.70 0.08 260);
+  /* Lighter blue */
+  --chart-5: oklch(0.35 0 0);
+  /* Gray accent */
+
   /* Sidebar colors */
-  --sidebar: oklch(0.92 0.02 240);  /* Light teal sidebar */
-  --sidebar-foreground: oklch(0.20 0 0);  /* Dark gray text */
-  --sidebar-primary: oklch(0.28 0.15 240);  /* Primary accent */
+  --sidebar: var(--popover-foreground);
+  --sidebar-foreground: oklch(0.20 0 0);
+  /* Dark gray text */
+  --sidebar-primary: oklch(0.57 0.22 260);
+  /* Primary blue */
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.95 0.02 85);  /* Cream accent */
+  --sidebar-accent: oklch(0.92 0.03 260);
+  /* Light blue accent */
   --sidebar-accent-foreground: oklch(0.25 0 0);
-  --sidebar-border: oklch(0.85 0.03 240);
-  --sidebar-ring: oklch(0.28 0.15 240);
+  --sidebar-border: oklch(0.85 0.03 260);
+  --sidebar-ring: oklch(0.57 0.22 260);
 
   /* Post Content Variables */
-  --post-content-bg: var(--background);  /* Very light teal */
-  --post-content-text: var(--foreground);  /* Dark gray text */
-  --post-content-heading: var(--foreground);  /* Very dark gray headings */
-  --post-content-muted: var(--muted-foreground);  /* Medium gray muted text */
-  --post-content-link: var(--primary);  /* Primary accent links */
-  --post-content-link-hover: var(--primary);  /* Darker on hover */
-  --post-content-code-bg: oklch(0.94 0.02 240);  /* Light teal code bg */
-  --post-content-code-text: oklch(0.25 0 0);  /* Dark gray code text */
-  --post-content-blockquote-bg: oklch(0.96 0.02 85);  /* Cream blockquote */
-  --post-content-blockquote-border: oklch(0.28 0.15 240);  /* Primary border */
-  --post-content-blockquote-text: oklch(0.25 0 0);  /* Dark gray text */
-  --post-content-table-border: oklch(0.85 0.02 240);  /* Light teal borders */
-  --post-content-table-header-bg: oklch(0.92 0.02 240);  /* Light teal header */
-  --post-content-highlight: var(--accent);  /* Light cream highlight */
-  --post-content-shadow: oklch(0.40 0 0 / 8%);  /* Gray shadows */
-  --post-content-image-shadow: oklch(0.30 0 0 / 12%);  /* Gray image shadows */
+  --post-content-bg: var(--background);
+  --post-content-text: var(--foreground);
+  --post-content-heading: var(--foreground);
+  --post-content-muted: var(--muted-foreground);
+  --post-content-link: var(--primary);
+  --post-content-link-hover: var(--primary);
+  --post-content-code-bg: oklch(0.95 0.02 260);
+  /* Light blue code bg */
+  --post-content-code-text: oklch(0.25 0 0);
+  /* Dark gray code text */
+  --post-content-blockquote-bg: oklch(0.95 0.02 260);
+  /* Light blue blockquote */
+  --post-content-blockquote-border: oklch(0.57 0.22 260);
+  /* Primary blue border */
+  --post-content-blockquote-text: oklch(0.25 0 0);
+  /* Dark gray text */
+  --post-content-table-border: oklch(0.85 0.03 260);
+  /* Light blue borders */
+  --post-content-table-header-bg: oklch(0.92 0.02 260);
+  /* Light blue header */
+  --post-content-highlight: var(--accent);
+  /* Light blue highlight */
+  --post-content-shadow: oklch(0.40 0 0 / 8%);
+  /* Gray shadows */
+  --post-content-image-shadow: oklch(0.30 0 0 / 12%);
+  /* Gray image shadows */
 
 }
 
@@ -151,10 +192,10 @@ hr {
   font-family: "Reckless Bold";
   src: url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.eot");
   src: url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.eot?#iefix") format("embedded-opentype"),
-  url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.woff2") format("woff2"),
-  url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.woff") format("woff"),
-  url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.ttf") format("truetype"),
-  url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.svg#Reckless Bold") format("svg");
+    url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.ttf") format("truetype"),
+    url("https://db.onlinewebfonts.com/t/34bf77357fafcf04d4061d4e19a32c85.svg#Reckless Bold") format("svg");
   font-display: swap;
 }
 
@@ -162,10 +203,10 @@ hr {
   font-family: "Ivar Text Hydro Regular";
   src: url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.eot");
   src: url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.eot?#iefix") format("embedded-opentype"),
-  url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.woff2") format("woff2"),
-  url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.woff") format("woff"),
-  url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.ttf") format("truetype"),
-  url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.svg#Ivar Text Hydro Regular") format("svg");
+    url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.ttf") format("truetype"),
+    url("https://db.onlinewebfonts.com/t/22aff4497483f2c6a5e001453850b935.svg#Ivar Text Hydro Regular") format("svg");
   font-display: swap;
 }
 
@@ -173,46 +214,56 @@ hr {
   * {
     border-color: var(--border);
   }
-  
+
   ::selection {
     background-color: var(--accent);
     color: var(--accent-foreground);
   }
-  
+
   ::-moz-selection {
     background-color: var(--accent);
     color: var(--accent-foreground);
   }
-  
+
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-size: 16px;
-    font-weight: 400;  
+    font-weight: 400;
     font-family: var(--font-body);
   }
 
-  h1, h2, h3, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h5,
+  h6 {
     color: var(--secondary);
     font-family: var(--font-headline);
   }
+
   h2 {
     color: var(--secondary);
     font-family: var(--font-italic);
   }
+
   h4 {
     color: var(--secondary);
     font-family: var(--font-sans);
   }
+
   p {
     color: var(--foreground);
   }
+
   /* a {
     font-family: var(--font-sans);
     font-weight: 500;
   } */
-  
-  input, textarea, select {
+
+  input,
+  textarea,
+  select {
     font-family: var(--font-sans);
   }
 
@@ -354,7 +405,8 @@ hr {
     padding-left: 1rem;
   }
 
-  .post-content ul, .post-content ol {
+  .post-content ul,
+  .post-content ol {
     list-style: none;
   }
 
@@ -519,12 +571,10 @@ hr {
   .post-content hr {
     border: none;
     height: 2px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--post-content-table-border),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        var(--post-content-table-border),
+        transparent);
     margin: 1rem 0;
   }
 
@@ -634,49 +684,64 @@ hr {
   }
 
   .post-content .flight-warning {
-    background: oklch(0.96 0.02 85);  /* Light cream background */
-    border-left: 4px solid oklch(0.60 0.12 50);  /* Orange/amber border */
+    background: oklch(0.96 0.02 85);
+    /* Light cream background */
+    border-left: 4px solid oklch(0.60 0.12 50);
+    /* Orange/amber border */
     padding: 1rem 1.5rem;
     border-radius: 0 0.5rem 0.5rem 0;
     margin: 1.5rem 0;
-    color: oklch(0.30 0 0);  /* Dark gray text */
+    color: oklch(0.30 0 0);
+    /* Dark gray text */
     box-shadow: 0 2px 8px var(--post-content-shadow);
   }
 
   .dark .post-content .flight-warning {
-    background: oklch(0.18 0.04 85);  /* Dark cream background */
-    color: oklch(0.80 0 0);  /* Light gray text */
-    border-left-color: oklch(0.70 0.10 50);  /* Brighter amber border */
+    background: oklch(0.18 0.04 85);
+    /* Dark cream background */
+    color: oklch(0.80 0 0);
+    /* Light gray text */
+    border-left-color: oklch(0.70 0.10 50);
+    /* Brighter amber border */
   }
 
   .post-content .technical-note {
-    background: oklch(0.94 0.02 240);  /* Light teal background */
-    border-left: 4px solid oklch(0.28 0.15 240);  /* Primary accent border */
+    background: oklch(0.95 0.02 260);
+    /* Light blue background */
+    border-left: 4px solid oklch(0.57 0.22 260);
+    /* Primary blue border */
     padding: 1rem 1.5rem;
     border-radius: 0 0.5rem 0.5rem 0;
     margin: 1.5rem 0;
-    color: oklch(0.25 0 0);  /* Dark gray text */
+    color: oklch(0.25 0 0);
+    /* Dark gray text */
     box-shadow: 0 2px 8px var(--post-content-shadow);
   }
 
   .dark .post-content .technical-note {
-    background: oklch(0.14 0.06 240);  /* Dark teal background */
-    color: oklch(0.80 0 0);  /* Light gray text */
-    border-left-color: oklch(0.55 0.12 240);  /* Bright teal border */
+    background: oklch(0.14 0.06 260);
+    /* Dark blue background */
+    color: oklch(0.80 0 0);
+    /* Light gray text */
+    border-left-color: oklch(0.57 0.18 260);
+    /* Bright blue border */
   }
 
-  /* Cream accent for special drone content */
+  /* Blue accent for special drone content */
   .post-content .uav-highlight {
-    background: linear-gradient(135deg, 
-      oklch(0.96 0.02 85), 
-      oklch(0.94 0.03 240));  /* Cream to light teal gradient */
-    border: 1px solid oklch(0.28 0.15 240);  /* Primary accent border */
+    background: linear-gradient(135deg,
+        oklch(0.96 0.02 260),
+        oklch(0.93 0.04 260));
+    /* Light blue gradient */
+    border: 1px solid oklch(0.57 0.22 260);
+    /* Primary blue border */
     border-radius: 0.75rem;
     padding: 1.5rem;
     margin: 2rem 0;
     position: relative;
     overflow: hidden;
-    color: oklch(0.20 0 0);  /* Dark gray text */
+    color: oklch(0.20 0 0);
+    /* Dark gray text */
   }
 
   .post-content .uav-highlight::before {
@@ -686,18 +751,21 @@ hr {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, 
-      oklch(0.28 0.15 240), 
-      oklch(0.95 0.02 85), 
-      oklch(0.28 0.15 240));  /* Primary to cream to primary */
+    background: linear-gradient(90deg,
+        oklch(0.57 0.22 260),
+        oklch(0.80 0.10 260),
+        oklch(0.57 0.22 260));
+    /* Primary to light blue to primary */
   }
 
   .dark .post-content .uav-highlight {
-    background: linear-gradient(135deg, 
-      oklch(0.16 0.04 85), 
-      oklch(0.14 0.06 240));  /* Dark cream to dark teal */
-    border-color: oklch(0.55 0.12 240);  /* Bright teal border */
-    color: oklch(0.85 0 0);  /* Light gray text */
+    background: linear-gradient(135deg,
+        oklch(0.16 0.04 260),
+        oklch(0.14 0.06 260));
+    /* Dark blue gradient */
+    border-color: oklch(0.57 0.18 260);
+    /* Bright blue border */
+    color: oklch(0.85 0 0);
+    /* Light gray text */
   }
 }
-

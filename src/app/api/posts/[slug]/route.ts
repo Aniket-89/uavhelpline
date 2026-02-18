@@ -24,59 +24,86 @@ export async function GET(
   });
 }
 
-// PUT - Update post
+// PUT /api/posts/[slug]
 export async function PUT(
   req: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: { slug: string } }
 ) {
   try {
-    const { slug } = await params;
+    const { slug } = params;
     const body = await req.json();
-    
-    const { title, status, content, author, thumbnail, categoryIds = [] } = body;
 
-    // Check if post exists
-    const existingPost = await prisma.post.findUnique({
+    const {
+      title,
+      status,
+      content,
+      author,
+      thumbnail,       // may be string URL, base64, or empty string to clear
+      categoryIds = [],// array of category ids
+    } = body ?? {};
+
+    // 1) Check exist
+    const existing = await prisma.post.findUnique({
       where: { slug },
       include: { categories: true },
     });
-
-    if (!existingPost) {
+    if (!existing) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    // Generate new slug if title changed
-    const newSlug = title 
-      ? title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
-      : slug;
+    // 2) Generate safe slug if title changed
+    const generateSlug = (s: string) =>
+      s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
-    // Delete existing category relationships
-    await prisma.postCategory.deleteMany({
-      where: { postId: existingPost.id },
-    });
+    let newSlug = slug;
+    if (title && title !== existing.title) {
+      const base = generateSlug(title);
+      newSlug = base;
 
-    // Update the post
-    const updatedPost = await prisma.post.update({
+      // Ensure uniqueness if collision
+      let suffix = 1;
+      // Only collide if the slug belongs to another post id
+      while (true) {
+        const found = await prisma.post.findUnique({ where: { slug: newSlug } });
+        if (!found || found.id === existing.id) break;
+        newSlug = `${base}-${suffix++}`;
+      }
+    }
+
+    // 3) Build data only with provided fields (no accidental undefineds)
+    const data: any = {};
+    if (typeof title === "string") data.title = title;
+    if (typeof status === "string") data.status = status as typeof existing.status;
+    if (typeof author === "string") data.author = author;
+    if (content !== undefined) data.content = content;
+    if (thumbnail !== undefined) data.thumbnail = thumbnail; // allow "" to clear
+    if (newSlug !== slug) data.slug = newSlug;
+
+    // 4) Timestamps logic
+    if (data.status) {
+      if (data.status === "published" && !existing.publishedAt) {
+        data.publishedAt = new Date();
+      }
+      if (data.status === "draft") {
+        data.draftedAt = new Date();
+      }
+    }
+
+    // 5) Reset and recreate category relations (simple approach)
+    await prisma.postCategory.deleteMany({ where: { postId: existing.id } });
+    if (Array.isArray(categoryIds) && categoryIds.length > 0) {
+      data.categories = {
+        create: categoryIds.map((id: string) => ({
+          category: { connect: { id } },
+        })),
+      };
+    } else {
+      data.categories = { create: [] };
+    }
+
+    const updated = await prisma.post.update({
       where: { slug },
-      data: {
-        title,
-        slug: newSlug,
-        status,
-        content,
-        author,
-        thumbnail,
-        categories: {
-          create: Array.isArray(categoryIds) && categoryIds.length > 0 
-            ? categoryIds.map((id: string) => ({
-                category: { connect: { id } },
-              }))
-            : [],
-        },
-        publishedAt: status === "published" && existingPost.status === "draft" 
-          ? new Date() 
-          : existingPost.publishedAt,
-        draftedAt: status === "draft" ? new Date() : existingPost.draftedAt,
-      },
+      data,
       include: {
         categories: {
           include: { category: true },
@@ -85,17 +112,15 @@ export async function PUT(
     });
 
     return NextResponse.json({
-      ...updatedPost,
-      categories: updatedPost.categories.map((c) => c.category),
+      ...updated,
+      categories: updated.categories.map((c) => c.category),
     });
   } catch (error) {
     console.error("Error updating post:", error);
-    return NextResponse.json(
-      { error: "Failed to update post" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update post" }, { status: 500 });
   }
 }
+
 
 // DELETE - Delete post
 export async function DELETE(

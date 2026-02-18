@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Post } from "@/types";
 import { StoryCard } from "../story-card";
-import DividerLink from "../divider-link";
 import { SubscriberComments } from "../subscriber-comments";
 
 // No custom hook needed - using existing usePublishedPosts
@@ -29,7 +28,7 @@ function HeroLoading() {
             <Skeleton className="h-3 w-2/3" />
           </div>
         </div>
-        
+
         {/* Side Posts Loading - Second on mobile */}
         <div className="space-y-4">
           {[...Array(2)].map((_, i) => (
@@ -44,7 +43,7 @@ function HeroLoading() {
             </div>
           ))}
         </div>
-        
+
         {/* Subscriber Comments Loading - Last on mobile */}
         <div className="p-4">
           <Skeleton className="h-32 w-full rounded-xs" />
@@ -82,15 +81,15 @@ function HeroLoading() {
 
 export function HeroSection() {
   const { data: allPosts = [], isLoading, error } = usePublishedPosts();
-  
+
   // Sort by date and get latest posts
   const posts = allPosts
-    .sort((a: Post, b: Post) => 
-      new Date(b.publishedAt || b.updatedAt).getTime() - 
+    .sort((a: Post, b: Post) =>
+      new Date(b.publishedAt || b.updatedAt).getTime() -
       new Date(a.publishedAt || a.updatedAt).getTime()
     )
     .slice(0, 6);
-  
+
   if (isLoading) {
     return (
       <section className="border-b border-gray-200 bg-white">
@@ -116,7 +115,7 @@ export function HeroSection() {
   return (
     <section className="md:mt-32 mt-12 pt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:py-16">
-        
+
         {/* Mobile Layout - Stacked */}
         <div className="block md:hidden space-y-6">
           {/* Featured Post - First on mobile */}
@@ -126,14 +125,14 @@ export function HeroSection() {
             <StoryCard post={sidePosts[1]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="px-0" className="bg-transparent w-full" />
             <hr />
           </div>
-          
+
           {/* Side Posts - Second on mobile */}
           <div className="space-y-4 p-0">
             <StoryCard post={sidePosts[0]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} contentClassName="p-0" />
             <hr />
-            <StoryCard post={sidePosts[2] || sidePosts[0]} skipImage={false} showCategories={false} showMetaInfo={true} showPreview={true} contentClassName="p-0" className="grid grid-cols-2 max-w-full w-full"/>
+            <StoryCard post={sidePosts[2] || sidePosts[0]} skipImage={false} showCategories={false} showMetaInfo={true} showPreview={true} contentClassName="p-0" className="grid grid-cols-2 max-w-full w-full" />
           </div>
-          
+
           {/* Subscriber Comments - Last on mobile */}
           <div>
             <SubscriberComments />
@@ -149,7 +148,7 @@ export function HeroSection() {
           </div>
           <div className="lg:col-span-6 md:col-span-8">
             <div className="space-y-4">
-              <StoryCard post={featuredPost} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="text-left px-8 pb-2" className="-mt-24"/>
+              <StoryCard post={featuredPost} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="text-left px-8 pb-2" className="-mt-24" />
               <hr />
               <StoryCard post={sidePosts[1]} skipImage={true} showCategories={false} showMetaInfo={true} showPreview={true} isBig={true} contentClassName="px-0" className="bg-transparent w-full" />
             </div>

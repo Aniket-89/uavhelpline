@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useCategories, useCreateCategory } from "@/hooks/useCategories";
 import { Plus, X, Tag, Loader2, Search } from "lucide-react";
-import type { Category } from "@/types";
+
 
 interface CategorySelectorProps {
   selectedCategories: string[];
@@ -63,9 +63,9 @@ export default function CategorySelector({
       setNewCategoryName("");
       setShowCreateForm(false);
       alert(`Category "${created.name}" created.`);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
-      if (e?.response?.data?.error?.includes("already exists")) {
+      if ((e as { response?: { data?: { error?: string } } })?.response?.data?.error?.includes("already exists")) {
         alert("This category already exists.");
       } else {
         alert("Failed to create category. Please try again.");
@@ -208,9 +208,8 @@ export default function CategorySelector({
               return (
                 <li key={category.id}>
                   <label
-                    className={`flex text-sm items-center gap-2 px-3 py-2 cursor-pointer hover:bg-muted/50 transition-colors ${
-                      checked ? "bg-primary/10" : ""
-                    }`}
+                    className={`flex text-sm items-center gap-2 px-3 py-2 cursor-pointer hover:bg-muted/50 transition-colors ${checked ? "bg-primary/10" : ""
+                      }`}
                   >
                     <input
                       type="checkbox"

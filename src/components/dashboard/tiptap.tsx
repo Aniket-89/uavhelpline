@@ -12,13 +12,13 @@ import CharacterCount from "@tiptap/extension-character-count";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import { Separator } from "@/components/ui/separator";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
+
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 // Temporarily removing dialog imports to fix build issues
@@ -54,9 +54,7 @@ import {
   AlignJustify,
   Highlighter,
   Type,
-  Palette,
-  Upload,
-  X,
+
   CheckSquare,
   Minus
 } from "lucide-react";
@@ -67,14 +65,16 @@ interface MenuBarProps {
 }
 
 interface TiptapEditorProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange?: (content: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialContent?: any;
   placeholder?: string;
   characterLimit?: number;
 }
 
 const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
-  const [uploadingImage, setUploadingImage] = useState(false);
+  const [, setUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!editor) return null;
@@ -87,7 +87,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
 
       const response = await axios.post('/api/upload/editor-image', formData);
       const imageUrl = response.data.url;
-      
+
       editor.chain().focus().setImage({ src: imageUrl }).run();
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -110,17 +110,17 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
 
 
 
-  const ToolbarButton = ({ 
-    onClick, 
-    isActive, 
-    disabled, 
-    children, 
-    title 
-  }: { 
-    onClick: () => void; 
-    isActive?: boolean; 
-    disabled?: boolean; 
-    children: React.ReactNode; 
+  const ToolbarButton = ({
+    onClick,
+    isActive,
+    disabled,
+    children,
+    title
+  }: {
+    onClick: () => void;
+    isActive?: boolean;
+    disabled?: boolean;
+    children: React.ReactNode;
     title?: string;
   }) => (
     <Button
@@ -148,7 +148,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <Bold className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
             isActive={editor.isActive('italic')}
@@ -156,7 +156,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <Italic className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             isActive={editor.isActive('underline')}
@@ -164,7 +164,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <UnderlineIcon className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleStrike().run()}
             isActive={editor.isActive('strike')}
@@ -172,7 +172,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <Strikethrough className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleCode().run()}
             isActive={editor.isActive('code')}
@@ -180,7 +180,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <Code className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleHighlight().run()}
             isActive={editor.isActive('highlight')}
@@ -244,7 +244,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <List className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             isActive={editor.isActive('orderedList')}
@@ -252,7 +252,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <ListOrdered className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleTaskList().run()}
             isActive={editor.isActive('taskList')}
@@ -273,7 +273,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <AlignLeft className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().setTextAlign('center').run()}
             isActive={editor.isActive({ textAlign: 'center' })}
@@ -281,7 +281,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <AlignCenter className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().setTextAlign('right').run()}
             isActive={editor.isActive({ textAlign: 'right' })}
@@ -289,7 +289,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <AlignRight className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().setTextAlign('justify').run()}
             isActive={editor.isActive({ textAlign: 'justify' })}
@@ -332,7 +332,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <ImageIcon className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <input
             ref={fileInputRef}
             type="file"
@@ -368,7 +368,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
           >
             <Undo className="h-4 w-4" />
           </ToolbarButton>
-          
+
           <ToolbarButton
             onClick={() => editor.chain().focus().redo().run()}
             disabled={!editor.can().redo()}
@@ -382,8 +382,8 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
   );
 };
 
-const TiptapEditor: React.FC<TiptapEditorProps> = ({ 
-  onChange, 
+const TiptapEditor: React.FC<TiptapEditorProps> = ({
+  onChange,
   initialContent,
   placeholder = 'Start writing your amazing content...',
   characterLimit = 10000
@@ -396,7 +396,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         },
       }),
       Underline,
-      Link.configure({ 
+      Link.configure({
         openOnClick: false,
         HTMLAttributes: {
           class: 'text-primary underline underline-offset-2 hover:text-primary/80 cursor-pointer',
@@ -421,12 +421,12 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
-      Placeholder.configure({ 
+      Placeholder.configure({
         placeholder,
         showOnlyWhenEditable: true,
         emptyEditorClass: 'is-editor-empty',
       }),
-      CharacterCount.configure({ 
+      CharacterCount.configure({
         limit: characterLimit,
       }),
       Highlight.configure({
@@ -456,13 +456,13 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   return (
     <div className="border rounded-xs shadow-sm bg-background overflow-hidden">
       <MenuBar editor={editor} />
-      
+
       <div className="relative">
-        <EditorContent 
-          editor={editor} 
+        <EditorContent
+          editor={editor}
           className="prose-editor"
         />
-        
+
         {/* Character count with progress indicator */}
         <div className="border-t bg-muted/30 px-4 py-2 flex items-center justify-between text-sm">
           <div className="flex items-center gap-4">
@@ -473,17 +473,16 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
               Characters: {characterCount}/{characterLimit}
             </span>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <div className="w-20 h-2 bg-border rounded-full overflow-hidden">
-              <div 
-                className={`h-full transition-all duration-300 ${
-                  characterPercentage > 90 
-                    ? 'bg-destructive' 
-                    : characterPercentage > 75 
-                    ? 'bg-orange-500' 
-                    : 'bg-primary'
-                }`}
+              <div
+                className={`h-full transition-all duration-300 ${characterPercentage > 90
+                    ? 'bg-destructive'
+                    : characterPercentage > 75
+                      ? 'bg-orange-500'
+                      : 'bg-primary'
+                  }`}
                 style={{ width: `${Math.min(characterPercentage, 100)}%` }}
               />
             </div>
@@ -493,7 +492,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
               </Badge>
             )}
           </div>
-      </div>
+        </div>
       </div>
 
       <style jsx global>{`

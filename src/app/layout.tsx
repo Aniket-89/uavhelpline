@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Archivo, Libre_Caslon_Text } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
-import Header from "@/components/content/header";
-import Footer from "@/components/content/footer";
+
 
 
 
@@ -40,7 +39,7 @@ export default function RootLayout({
         className={`${playfairDisplay.variable} ${archivo.variable} ${libreCaslonText.variable} antialiased`}
       >
         <QueryProvider>
-        {children}
+          {children}
         </QueryProvider>
       </body>
     </html>

@@ -18,6 +18,7 @@ export interface Post {
   slug: string;
   thumbnail?: string;
   status: PostStatus;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any; // Rich text format - can be Editor.js JSON, TipTap nodes, etc.
   author: string;
   categories: Category[];

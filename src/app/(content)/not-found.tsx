@@ -8,7 +8,7 @@ export default function ContentNotFound() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
         <div className="text-center space-y-8">
-          
+
           {/* Drone Icon with 404 */}
           <div className="relative">
             <div className="text-8xl md:text-9xl mb-8 opacity-15">🚁</div>
@@ -23,7 +23,7 @@ export default function ContentNotFound() {
               Story Not Found in Our Archives
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground font-sans leading-relaxed">
-              The story you're searching for has flown beyond our radar. 
+              The story you&apos;re searching for has flown beyond our radar.
               Perhaps it was moved to a different flight path, or maybe it never existed in our database.
             </p>
           </div>
@@ -34,20 +34,20 @@ export default function ContentNotFound() {
               <h2 className="text-xl md:text-2xl font-headline font-bold text-secondary">
                 Navigate to Safety
               </h2>
-              
+
               <div className="grid md:grid-cols-2 gap-4">
                 <Link href="/">
-                  <Button 
+                  <Button
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-sans"
                     size="lg"
                   >
                     🏠 Home Base
                   </Button>
                 </Link>
-                
+
                 <Link href="/stories">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full border-secondary text-secondary hover:bg-secondary/10 font-sans"
                     size="lg"
                   >
@@ -55,16 +55,16 @@ export default function ContentNotFound() {
                   </Button>
                 </Link>
               </div>
-              
+
               <div className="flex flex-wrap justify-center gap-6 pt-4 text-sm font-sans">
-                <Link 
-                  href="/stories" 
+                <Link
+                  href="/stories"
                   className="text-muted-foreground hover:text-secondary transition-colors"
                 >
                   Latest UAV News
                 </Link>
-                <Link 
-                  href="/admin" 
+                <Link
+                  href="/admin"
                   className="text-muted-foreground hover:text-secondary transition-colors"
                 >
                   Admin Dashboard

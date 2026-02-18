@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Youtube, Linkedin, Github } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
 interface SocialLink {
   name: string;
@@ -40,11 +40,11 @@ export function SocialLinks({ variant = "footer", className = "" }: SocialLinksP
     }
   ];
 
-  const baseClasses = variant === "footer" 
+  const baseClasses = variant === "footer"
     ? "w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
     : variant === "inline"
-    ? "w-7 h-7 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-all duration-300"
-    : "w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110";
+      ? "w-7 h-7 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-all duration-300"
+      : "w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110";
 
   return (
     <div className={`flex gap-4 ${className}`}>

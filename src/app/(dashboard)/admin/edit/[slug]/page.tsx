@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -34,14 +34,14 @@ import {
   User,
   Tag,
   Globe,
-  FileText,
+
   Clock,
   CheckCircle,
   AlertCircle,
   Settings
 } from "lucide-react";
 import Link from "next/link";
-import type { Post, PostStatus } from "@/types";
+import type { PostStatus } from "@/types";
 
 export default function EditPost() {
   const { slug } = useParams();
@@ -66,7 +66,7 @@ export default function EditPost() {
   const [isPublishing, setIsPublishing] = useState(false);
 
   // Thumbnail state
-  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
   const [existingThumbnail, setExistingThumbnail] = useState<string>("");
 
@@ -219,7 +219,7 @@ export default function EditPost() {
         <div className="text-red-600 mb-4">
           <AlertCircle className="w-12 h-12 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Post Not Found</h2>
-          <p>The post you're looking for doesn't exist or couldn't be loaded.</p>
+          <p>The post you&apos;re looking for doesn&apos;t exist or couldn&apos;t be loaded.</p>
         </div>
         <Button asChild>
           <Link href="/admin/posts">
@@ -252,8 +252,8 @@ export default function EditPost() {
           <Badge
             variant={post.status === "published" ? "default" : "secondary"}
             className={`${post.status === "published"
-                ? "bg-green-600 hover:bg-green-700"
-                : "bg-gray-600 hover:bg-gray-700"
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-gray-600 hover:bg-gray-700"
               } text-white text-sm rounded-xs py-1`}
           >
             {post.status === "published" ? (
@@ -328,7 +328,7 @@ export default function EditPost() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Post</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete "{post.title}"? This action cannot be undone.
+                  Are you sure you want to delete &ldquo;{post.title}&rdquo;? This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -413,6 +413,7 @@ export default function EditPost() {
               {/* Featured Image */}
 
               <div className="aspect-video relative overflow-hidden rounded-xs">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.thumbnail || "/placeholder-640x480.png"}
                   alt={post.title}
@@ -480,6 +481,7 @@ export default function EditPost() {
                 {/* Preview (new upload OR existing) */}
                 {(thumbnailPreview || existingThumbnail) ? (
                   <div className="relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={thumbnailPreview || existingThumbnail}
                       alt="Thumbnail preview"
@@ -497,6 +499,7 @@ export default function EditPost() {
                   </div>
                 ) : (
                   <div className="relative w-full max-w-md">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/placeholder-640x480.png"
                       alt="Placeholder"

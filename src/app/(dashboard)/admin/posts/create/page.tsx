@@ -13,7 +13,7 @@ export default function CreatePost() {
     const router = useRouter();
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
-    const [status, setStatus] = useState<PostStatus>("draft");
+    const [status] = useState<PostStatus>("draft");
     const [content, setContent] = useState(null);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [author, setAuthor] = useState("Admin"); // Default author
@@ -34,8 +34,8 @@ export default function CreatePost() {
     };
 
     const handleCategoryToggle = (categoryId: string) => {
-        setSelectedCategories(prev => 
-            prev.includes(categoryId) 
+        setSelectedCategories(prev =>
+            prev.includes(categoryId)
                 ? prev.filter(id => id !== categoryId)
                 : [...prev, categoryId]
         );
@@ -59,27 +59,27 @@ export default function CreatePost() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!title.trim() || !content) {
             alert("Please fill in title and content");
             return;
         }
 
         setIsSubmitting(true);
-        
+
         try {
             let thumbnailUrl = "";
-            
+
             // Upload thumbnail if selected
             if (thumbnail) {
                 const formData = new FormData();
                 formData.append('file', thumbnail);
-                
+
                 const uploadResponse = await fetch('/api/upload/thumbnail', {
                     method: 'POST',
                     body: formData,
                 });
-                
+
                 if (uploadResponse.ok) {
                     const uploadResult = await uploadResponse.json();
                     thumbnailUrl = uploadResult.url;
@@ -111,60 +111,60 @@ export default function CreatePost() {
         <div className="container mx-auto px-6 py-8 max-w-8xl grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="col-span-3">
 
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold mb-2">Create New Post</h1>
-                <p className="text-gray-600">Fill in the details below to create a new post</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Title */}
-                <div>
-                    <label htmlFor="title" className="block text-lg font-bold mb-2">
-                        Title *
-                    </label>
-                    <Input
-                        id="title"
-                        type="text"
-                        value={title}
-                        onChange={(e) => handleTitleChange(e.target.value)}
-                        placeholder="Enter post title..."
-                        required
-                    />
+                <div className="mb-6">
+                    <h1 className="text-2xl font-bold mb-2">Create New Post</h1>
+                    <p className="text-gray-600">Fill in the details below to create a new post</p>
                 </div>
 
-                {/* Slug */}
-                <div>
-                    <label htmlFor="slug" className="block text-lg font-bold mb-2">
-                        Slug
-                    </label>
-                    <Input
-                        id="slug"
-                        type="text"
-                        value={slug}
-                        onChange={(e) => setSlug(e.target.value)}
-                        placeholder="auto-generated-from-title"
-                    />
-                    <p className="text-xs text-ring mt-1">URL-friendly version of the title</p>
-                </div>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Title */}
+                    <div>
+                        <label htmlFor="title" className="block text-lg font-bold mb-2">
+                            Title *
+                        </label>
+                        <Input
+                            id="title"
+                            type="text"
+                            value={title}
+                            onChange={(e) => handleTitleChange(e.target.value)}
+                            placeholder="Enter post title..."
+                            required
+                        />
+                    </div>
 
-                {/* Author */}
-                <div>
-                    <label htmlFor="author" className="block text-lg font-bold mb-2">
-                        Author *
-                    </label>
-                    <Input
-                        id="author"
-                        type="text"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                        placeholder="Author name..."
-                        required
-                    />
-                </div>
+                    {/* Slug */}
+                    <div>
+                        <label htmlFor="slug" className="block text-lg font-bold mb-2">
+                            Slug
+                        </label>
+                        <Input
+                            id="slug"
+                            type="text"
+                            value={slug}
+                            onChange={(e) => setSlug(e.target.value)}
+                            placeholder="auto-generated-from-title"
+                        />
+                        <p className="text-xs text-ring mt-1">URL-friendly version of the title</p>
+                    </div>
 
-                
+                    {/* Author */}
+                    <div>
+                        <label htmlFor="author" className="block text-lg font-bold mb-2">
+                            Author *
+                        </label>
+                        <Input
+                            id="author"
+                            type="text"
+                            value={author}
+                            onChange={(e) => setAuthor(e.target.value)}
+                            placeholder="Author name..."
+                            required
+                        />
+                    </div>
 
-                {/* Status
+
+
+                    {/* Status
                 <div>
                     <label className="block text-sm font-medium mb-2">
                         Status *
@@ -195,39 +195,39 @@ export default function CreatePost() {
                     </div>
                 </div> */}
 
-                
 
-                {/* Content Editor */}
-                <div>
-                    <label className="block text-lg font-bold mb-2">
-                        Content *
-                    </label>
-                    <TiptapEditor 
-                        onChange={setContent} 
-                        placeholder="Write your UAV/drone content here. Share insights, reviews, tutorials, or news about the drone industry..."
-                        characterLimit={15000}
-                    />
-                </div>
 
-                {/* Submit Buttons */}
-                <div className="flex gap-4 pt-6">
-                    <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="px-6"
-                    >
-                        {isSubmitting ? "Creating..." : "Create Post"}
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => router.push("/admin/posts")}
-                        disabled={isSubmitting}
-                    >
-                        Cancel
-                    </Button>
-                </div>
-            </form>
+                    {/* Content Editor */}
+                    <div>
+                        <label className="block text-lg font-bold mb-2">
+                            Content *
+                        </label>
+                        <TiptapEditor
+                            onChange={setContent}
+                            placeholder="Write your UAV/drone content here. Share insights, reviews, tutorials, or news about the drone industry..."
+                            characterLimit={15000}
+                        />
+                    </div>
+
+                    {/* Submit Buttons */}
+                    <div className="flex gap-4 pt-6">
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="px-6"
+                        >
+                            {isSubmitting ? "Creating..." : "Create Post"}
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => router.push("/admin/posts")}
+                            disabled={isSubmitting}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </form>
             </div>
             <div className="col-span-1 space-y-4">
                 {/* Thumbnail Upload */}
@@ -235,62 +235,63 @@ export default function CreatePost() {
                 <Card className="bg-white min-h-64">
                     <CardHeader className="font-sans bg-popover shadow-b-md">
 
-                    <label htmlFor="thumbnail" className="block text-lg font-serif font-bold">
-                        Featured Image (Thumbnail)
-                    </label>
+                        <label htmlFor="thumbnail" className="block text-lg font-serif font-bold">
+                            Featured Image (Thumbnail)
+                        </label>
                     </CardHeader>
                     <CardContent>
 
-                    <div className="space-y-4">
-                        <Input
-                            id="thumbnail"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleThumbnailChange}
-                            className="file:mr-4 file:py-2 file:px-4 file:rounded-xs file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                        <div className="space-y-4">
+                            <Input
+                                id="thumbnail"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleThumbnailChange}
+                                className="file:mr-4 file:py-2 file:px-4 file:rounded-xs file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
                             />
-                        {thumbnailPreview && (
-                            <div className="relative">
-                                <img 
-                                    src={thumbnailPreview} 
-                                    alt="Thumbnail preview" 
-                                    className="w-full max-w-md h-48 object-cover rounded-xs border"
+                            {thumbnailPreview && (
+                                <div className="relative">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={thumbnailPreview}
+                                        alt="Thumbnail preview"
+                                        className="w-full max-w-md h-48 object-cover rounded-xs border"
                                     />
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="sm"
-                                    className="absolute top-2 right-2"
-                                    onClick={() => {
-                                        setThumbnail(null);
-                                        setThumbnailPreview("");
-                                    }}
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="sm"
+                                        className="absolute top-2 right-2"
+                                        onClick={() => {
+                                            setThumbnail(null);
+                                            setThumbnailPreview("");
+                                        }}
                                     >
-                                    Remove
-                                </Button>
-                            </div>
-                        )}
-                        <p className="text-xs text-gray-500">
-                            Upload a featured image for your post. Recommended size: 1200x630px
-                        </p>
-                    </div>
-                        </CardContent>
+                                        Remove
+                                    </Button>
+                                </div>
+                            )}
+                            <p className="text-xs text-gray-500">
+                                Upload a featured image for your post. Recommended size: 1200x630px
+                            </p>
+                        </div>
+                    </CardContent>
                 </Card>
-            {/* Categories */}
+                {/* Categories */}
                 <Card className="bg-white">
                     <CardHeader className="font-serif bg-popover">
 
-                    <label className="block text-lg font-bold">
-                        Categories
-                    </label>
+                        <label className="block text-lg font-bold">
+                            Categories
+                        </label>
                     </CardHeader>
                     <CardContent>
 
-                    <CategorySelector
-                        selectedCategories={selectedCategories}
-                        onCategoryToggle={handleCategoryToggle}
+                        <CategorySelector
+                            selectedCategories={selectedCategories}
+                            onCategoryToggle={handleCategoryToggle}
                         />
-                        </CardContent>
+                    </CardContent>
                 </Card>
             </div>
 

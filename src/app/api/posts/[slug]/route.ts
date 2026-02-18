@@ -27,10 +27,10 @@ export async function GET(
 // PUT /api/posts/[slug]
 export async function PUT(
   req: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const body = await req.json();
 
     const {
@@ -71,6 +71,7 @@ export async function PUT(
     }
 
     // 3) Build data only with provided fields (no accidental undefineds)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data: any = {};
     if (typeof title === "string") data.title = title;
     if (typeof status === "string") data.status = status as typeof existing.status;
@@ -129,7 +130,7 @@ export async function DELETE(
 ) {
   try {
     const { slug } = await params;
-    
+
     // Check if post exists
     const existingPost = await prisma.post.findUnique({
       where: { slug },

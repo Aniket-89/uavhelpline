@@ -1,10 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, User } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import DividerLink from "./divider-link";
 
 interface SlideshowStory {
@@ -47,7 +44,7 @@ const defaultStories: SlideshowStory[] = [
     }
   },
   {
-    id: "2", 
+    id: "2",
     title: "Commercial Drone Delivery Networks Expand to Rural Communities Worldwide",
     category: "Commercial UAV",
     thumbnail: "/general-img-landscape.png",
@@ -66,7 +63,7 @@ const defaultStories: SlideshowStory[] = [
     id: "3",
     title: "AI-Powered Agricultural Drones Boost Crop Yields by 40% in Latest Trials",
     category: "AgTech",
-    thumbnail: "/general-img-landscape.png", 
+    thumbnail: "/general-img-landscape.png",
     fullImage: "/general-img-landscape.png",
     excerpt: "Smart farming drones equipped with precision sensors and AI analytics are revolutionizing modern agriculture practices.",
     author: "Dr. Elena Vasquez",
@@ -80,7 +77,7 @@ const defaultStories: SlideshowStory[] = [
   },
   {
     id: "4",
-    title: "Drone Racing Championship Sets Speed Records with Next-Gen Racing UAVs", 
+    title: "Drone Racing Championship Sets Speed Records with Next-Gen Racing UAVs",
     category: "Racing & Sports",
     thumbnail: "/general-img-landscape.png",
     fullImage: "/general-img-landscape.png",
@@ -99,7 +96,7 @@ const defaultStories: SlideshowStory[] = [
     title: "Environmental Monitoring Drones Track Climate Change Impact in Real-Time",
     category: "Environmental",
     thumbnail: "/general-img-landscape.png",
-    fullImage: "/general-img-landscape.png", 
+    fullImage: "/general-img-landscape.png",
     excerpt: "Specialized environmental drones provide crucial data for climate research and conservation efforts across global ecosystems.",
     author: "Dr. Anna Chen",
     publishedAt: "2024-01-05",
@@ -112,80 +109,72 @@ const defaultStories: SlideshowStory[] = [
   }
 ];
 
-export default function StorySlideshow({ 
+export default function StorySlideshow({
   title = "Featured UAV Stories",
-  stories = defaultStories 
+  stories = defaultStories
 }: {
   title?: string;
   stories?: SlideshowStory[];
 }) {
   const [selectedStory, setSelectedStory] = useState<SlideshowStory>(stories[0]);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       <DividerLink href="/news">
-          {title}
+        {title}
       </DividerLink>
-      
+
       <div className="grid md:grid-cols-12">
         {/* Left Sidebar - Story Tiles */}
         <div className=" md:col-span-4 h-full rounded-sm">
-            <div className="overflow-y-auto grid grid-cols-2 md:grid-cols-1 h-full scrollbar-hide">
-              {stories.map((story) => (
-                <Card
-                  key={story.id}
-                  className={`cursor-pointer border-none bg-accent transition-all rounded-xs duration-300 p-2 lg:p-6 ${
-                    selectedStory.id === story.id 
-                      ? 'bg-accent-foreground/70' 
-                      : ''
+          <div className="overflow-y-auto grid grid-cols-2 md:grid-cols-1 h-full scrollbar-hide">
+            {stories.map((story) => (
+              <Card
+                key={story.id}
+                className={`cursor-pointer border-none bg-accent transition-all rounded-xs duration-300 p-2 lg:p-6 ${selectedStory.id === story.id
+                  ? 'bg-accent-foreground/70'
+                  : ''
                   }`}
-                  onClick={() => setSelectedStory(story)}
-                >
-                  <div className="flex gap-3 items-center">
-                    <div className="relative w-10 h-10 md:w-16 md:h-16 flex-shrink-0">
-                      <Image
-                        src={story.thumbnail}
-                        alt={story.title}
-                        fill
-                        className="object-cover rounded-xs"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-
-                      <h4 className={`font-headline font-semibold text-xs leading-tight line-clamp-2 mb-1 `}>
-                        {story.title}
-                      </h4>
-                     
-                    </div>
+                onClick={() => setSelectedStory(story)}
+              >
+                <div className="flex gap-3 items-center">
+                  <div className="relative w-10 h-10 md:w-16 md:h-16 flex-shrink-0">
+                    <Image
+                      src={story.thumbnail}
+                      alt={story.title}
+                      fill
+                      className="object-cover rounded-xs"
+                    />
                   </div>
-                </Card>
-              ))}
+                  <div className="flex-1 min-w-0">
+
+                    <h4 className={`font-headline font-semibold text-xs leading-tight line-clamp-2 mb-1 `}>
+                      {story.title}
+                    </h4>
+
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
 
         {/* Right Side - Detailed View */}
         <div className=" md:col-span-8">
-          
 
-            {/* Main Image */}
-            <div className="relative w-full aspect-[8/5]">
-              <Image
-                src={selectedStory.fullImage}
-                alt={selectedStory.title}
-                fill
-                className="object-cover"
-              />
-            </div>
 
-          
+          {/* Main Image */}
+          <div className="relative w-full aspect-[8/5]">
+            <Image
+              src={selectedStory.fullImage}
+              alt={selectedStory.title}
+              fill
+              className="object-cover"
+            />
+          </div>
+
+
         </div>
       </div>
     </div>

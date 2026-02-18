@@ -5,12 +5,12 @@ import type { Post } from "@/types";
 import PostCard from "./postCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+
 // Removed select imports to avoid module resolution issues
-import { 
-  Search, 
-  Plus, 
-  Filter,
+import {
+  Search,
+  Plus,
+
   SortAsc,
   SortDesc,
   Grid,
@@ -23,7 +23,7 @@ import { Separator } from "../ui/separator";
 export default function PostList() {
   const { data: posts = [], isLoading, error } = usePosts();
   const { data: categories = [] } = useCategories();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -34,19 +34,19 @@ export default function PostList() {
   const filteredPosts = useMemo(() => {
     return posts.filter((post: Post) => {
       const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          post.author.toLowerCase().includes(searchTerm.toLowerCase());
-      
+        post.author.toLowerCase().includes(searchTerm.toLowerCase());
+
       const matchesStatus = statusFilter === "all" || post.status === statusFilter;
-      
-      const matchesCategory = categoryFilter === "all" || 
-                            post.categories?.some(cat => cat.id === categoryFilter);
+
+      const matchesCategory = categoryFilter === "all" ||
+        post.categories?.some(cat => cat.id === categoryFilter);
 
       return matchesSearch && matchesStatus && matchesCategory;
     }).sort((a: Post, b: Post) => {
       const dateA = new Date(a.publishedAt || a.draftedAt || a.updatedAt);
       const dateB = new Date(b.publishedAt || b.draftedAt || b.updatedAt);
-      
-      return sortOrder === "desc" 
+
+      return sortOrder === "desc"
         ? dateB.getTime() - dateA.getTime()
         : dateA.getTime() - dateB.getTime();
     });
@@ -102,9 +102,9 @@ export default function PostList() {
           </div>
 
           {/* Status Filter */}
-          <select 
-            value={statusFilter} 
-            onChange={(e) => setStatusFilter(e.target.value as any)}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as "all" | "draft" | "published")}
             className="h-9 w-[140px] rounded-xs border border-input bg-white px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
           >
             <option value="all">All Status</option>
@@ -113,8 +113,8 @@ export default function PostList() {
           </select>
 
           {/* Category Filter */}
-          <select 
-            value={categoryFilter} 
+          <select
+            value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             className="h-9 w-[160px] rounded-xs border border-input bg-white px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
           >
@@ -136,7 +136,7 @@ export default function PostList() {
           >
             {sortOrder === "desc" ? <SortDesc className="w-4 h-4" /> : <SortAsc className="w-4 h-4" />}
           </Button>
-          
+
           <div className="flex border rounded-xs">
             <Button
               variant={viewMode === "grid" ? "default" : "ghost"}
@@ -172,8 +172,8 @@ export default function PostList() {
           </>
         )}
       </div>
-      <Separator/>
-      
+      <Separator />
+
 
       {/* Posts Grid/List */}
       {filteredPosts.length === 0 ? (
@@ -202,14 +202,14 @@ export default function PostList() {
         </div>
       ) : (
         <div className={
-          viewMode === "grid" 
-            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
+          viewMode === "grid"
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             : "space-y-4"
         }>
           {filteredPosts.map((post: Post) => (
-            <PostCard 
-              key={post.id} 
-              post={post} 
+            <PostCard
+              key={post.id}
+              post={post}
             />
           ))}
         </div>

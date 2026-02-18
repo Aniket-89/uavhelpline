@@ -49,6 +49,7 @@ export async function POST(req: Request) {
   });
   const existingIds = new Set(existing.map(c => c.id));
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const postData: any = {
     title,
     slug,

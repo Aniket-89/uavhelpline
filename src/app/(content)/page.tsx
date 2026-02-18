@@ -1,7 +1,4 @@
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap, Shield, Users } from "lucide-react";
 import { HeroSection } from "@/components/content/home/hero-section";
 import BlogsSection from "@/components/content/home/blogs-section";
 import MagazineLayout from "@/components/content/home/magazine-layout";

@@ -6,11 +6,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Content utility functions
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getContentPreview(content: any, maxLength: number = 150): string {
   if (!content) return "Discover the latest in drone technology and UAV innovations...";
-  
+
   try {
     // Extract text from TipTap content
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const extractText = (node: any): string => {
       if (node.type === 'text') return node.text || '';
       if (node.content) {
@@ -18,14 +20,14 @@ export function getContentPreview(content: any, maxLength: number = 150): string
       }
       return '';
     };
-    
+
     let text = '';
     if (content.type === 'doc' && content.content) {
       text = content.content.map(extractText).join(' ');
     } else {
       text = extractText(content);
     }
-    
+
     return text.slice(0, maxLength) + (text.length > maxLength ? '...' : '');
   } catch {
     return "Explore comprehensive UAV guides, drone reviews, and aviation insights...";
@@ -40,6 +42,7 @@ export function formatDate(dateString: string): string {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function calculateReadingTime(content: any): number {
   const text = getContentPreview(content, 10000); // Get full text
   const wordsPerMinute = 200;

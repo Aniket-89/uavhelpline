@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { Post } from "@/types";
+
 import { usePublishedPosts } from "@/hooks/usePosts";
 import { useCategories } from "@/hooks/useCategories";
 import { StoryCard } from "@/components/content/story-card";
@@ -16,7 +16,7 @@ import { CTASection } from "@/components/content/cta-section";
 export default function StoriesListPage() {
   const { data: posts = [], isLoading, error } = usePublishedPosts();
   const { data: categories = [] } = useCategories();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -27,11 +27,11 @@ export default function StoriesListPage() {
   const filteredPosts = useMemo(() => {
     return posts.filter(post => {
       const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           post.author.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesCategory = selectedCategory === "all" || 
-                             post.categories?.some(cat => cat.id === selectedCategory);
-      
+        post.author.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesCategory = selectedCategory === "all" ||
+        post.categories?.some(cat => cat.id === selectedCategory);
+
       return matchesSearch && matchesCategory;
     });
   }, [posts, searchTerm, selectedCategory]);
@@ -47,10 +47,10 @@ export default function StoriesListPage() {
         <Card className="p-8 text-center max-w-md">
           <h2 className="text-xl font-semibold mb-4">Unable to Load Stories</h2>
           <p className="text-muted-foreground">
-            We're having trouble loading the latest drone stories. Please try again later.
+            We&apos;re having trouble loading the latest drone stories. Please try again later.
           </p>
-          <Button 
-            onClick={() => window.location.reload()} 
+          <Button
+            onClick={() => window.location.reload()}
             className="mt-4"
           >
             Retry
@@ -65,7 +65,7 @@ export default function StoriesListPage() {
       {/* Search and Filters Section */}
       <div className="mt-16">
         <div className="max-w-4xl mx-auto px-3">
-          
+
 
           <div className="max-w-3xl mx-auto">
             <SearchAndFilters
@@ -117,13 +117,13 @@ export default function StoriesListPage() {
               <div className="text-6xl mb-4">🚁</div>
               <h3 className="text-xl font-semibold mb-2">No Stories Found</h3>
               <p className="text-muted-foreground mb-6">
-                {searchTerm || selectedCategory !== "all" 
+                {searchTerm || selectedCategory !== "all"
                   ? "Try adjusting your search or filter criteria."
                   : "No published stories are available at the moment."
                 }
               </p>
               {(searchTerm || selectedCategory !== "all") && (
-                <Button 
+                <Button
                   onClick={() => {
                     setSearchTerm("");
                     setSelectedCategory("all");
@@ -137,8 +137,8 @@ export default function StoriesListPage() {
             </Card>
           ) : (
             <>
-              <div className={viewMode === "grid" 
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" 
+              <div className={viewMode === "grid"
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
                 : "space-y-6"
               }>
                 {paginatedPosts.map((post) => (

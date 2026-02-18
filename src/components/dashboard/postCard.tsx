@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,14 +17,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { 
-  Calendar, 
-  Eye, 
-  Edit3, 
-  MoreHorizontal, 
-  Trash2, 
-  Tag,
-  User,
+import {
+  Calendar,
+  Eye,
+  Edit3,
+  MoreHorizontal,
+  Trash2,
+
   Clock,
   ExternalLink
 } from "lucide-react";
@@ -40,7 +39,7 @@ interface PostCardProps {
 export default function PostCard({ post }: PostCardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
-  
+
   const updatePostStatus = useUpdatePostStatus();
   const deletePost = useDeletePost();
 
@@ -52,10 +51,12 @@ export default function PostCard({ post }: PostCardProps) {
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getContentPreview = (content: any) => {
     if (!content) return "No content available";
-    
+
     // Extract text from TipTap JSON content
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const extractText = (node: any): string => {
       if (node.type === 'text') return node.text || '';
       if (node.content) {
@@ -74,7 +75,7 @@ export default function PostCard({ post }: PostCardProps) {
 
   const handleDelete = async () => {
     if (!confirm(`Are you sure you want to delete "${post.title}"?`)) return;
-    
+
     setIsDeleting(true);
     try {
       await deletePost.mutateAsync(post.slug);
@@ -107,28 +108,28 @@ export default function PostCard({ post }: PostCardProps) {
       {/* Image Header with Overlay */}
       <div className="relative overflow-hidden">
         <div className="aspect-video relative">
-          <img 
-            src={post.thumbnail || '/general-img-landscape.png'} 
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={post.thumbnail || '/general-img-landscape.png'}
             alt={post.title}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
+
           {/* Status Badge */}
           <div className="absolute top-3 left-3 flex gap-2">
-            <Badge 
+            <Badge
               variant={post.status === "published" ? "default" : "secondary"}
-              className={`${
-                post.status === "published" 
-                  ? "bg-green-600 hover:bg-green-700" 
-                  : "bg-orange-600 hover:bg-orange-700"
-              } text-white shadow-sm`}
+              className={`${post.status === "published"
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-orange-600 hover:bg-orange-700"
+                } text-white shadow-sm`}
             >
               {post.status === "published" ? "Published" : "Draft"}
             </Badge>
             <Link href={`/admin/edit/${post.slug}?mode=edit`} className="flex items-center">
-                    <Edit3 className="mr-2 h-5 w-5 border-accent text-ring hover:bg-accent hover:text-primary bg-popover/70 border rounded-xs" />
-                  </Link>
+              <Edit3 className="mr-2 h-5 w-5 border-accent text-ring hover:bg-accent hover:text-primary bg-popover/70 border rounded-xs" />
+            </Link>
           </div>
 
           {/* Quick Actions Overlay */}
@@ -153,21 +154,21 @@ export default function PostCard({ post }: PostCardProps) {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={handleStatusToggle}
                   disabled={isUpdatingStatus}
                 >
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  {isUpdatingStatus 
-                    ? "Updating..." 
-                    : post.status === "published" 
-                      ? "Unpublish" 
+                  {isUpdatingStatus
+                    ? "Updating..."
+                    : post.status === "published"
+                      ? "Unpublish"
                       : "Publish"
                   }
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                  onClick={handleDelete} 
+                <DropdownMenuItem
+                  onClick={handleDelete}
                   disabled={isDeleting}
                   className="text-destructive focus:text-destructive"
                 >
@@ -189,7 +190,7 @@ export default function PostCard({ post }: PostCardProps) {
             </Link>
           </CardTitle>
         </div>
-        
+
         {/* Categories */}
         {/* {post.categories && post.categories.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-1">
@@ -230,20 +231,20 @@ export default function PostCard({ post }: PostCardProps) {
       </CardContent>
 
       <CardFooter className="pb-2 px-3 text-xs text-muted-foreground">
-      <div className="flex items-center gap-4">
-            {post.publishedAt && (
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                <span>{formatDate(post.publishedAt)}</span>
-              </div>
-            )}
-            {post.draftedAt && !post.publishedAt && (
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                <span>Draft from {formatDate(post.draftedAt)}</span>
-              </div>
-            )}
-          </div>
+        <div className="flex items-center gap-4">
+          {post.publishedAt && (
+            <div className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              <span>{formatDate(post.publishedAt)}</span>
+            </div>
+          )}
+          {post.draftedAt && !post.publishedAt && (
+            <div className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              <span>Draft from {formatDate(post.draftedAt)}</span>
+            </div>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

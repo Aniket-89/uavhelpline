@@ -10,10 +10,10 @@ interface NewsletterSignupProps {
   showDescription?: boolean;
 }
 
-export function NewsletterSignup({ 
-  className = "", 
+export function NewsletterSignup({
+  className = "",
   variant = "default",
-  showDescription = true 
+  showDescription = true
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -28,20 +28,20 @@ export function NewsletterSignup({
     }
 
     setStatus("loading");
-    
+
     // Simulate API call
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       setStatus("success");
       setMessage("Successfully subscribed! Check your email for confirmation.");
       setEmail("");
-    } catch (error) {
+    } catch {
       setStatus("error");
       setMessage("Something went wrong. Please try again.");
     }
   };
 
-  const inputClasses = variant === "footer" 
+  const inputClasses = variant === "footer"
     ? "bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
     : "bg-white border-gray-200 focus:border-blue-500";
 
@@ -51,13 +51,13 @@ export function NewsletterSignup({
     <div className={className}>
       {showDescription && (
         <p className={`mb-4 text-sm ${textColor}`}>
-          {variant === "footer" 
+          {variant === "footer"
             ? "Get the latest drone news and tutorials delivered to your inbox."
             : "Join thousands of drone enthusiasts and get exclusive content, tips, and early access to new guides."
           }
         </p>
       )}
-      
+
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="flex gap-2">
           <Input
@@ -68,9 +68,9 @@ export function NewsletterSignup({
             className={inputClasses}
             disabled={status === "loading"}
           />
-          <Button 
-            type="submit" 
-            size="sm" 
+          <Button
+            type="submit"
+            size="sm"
             className="bg-blue-600 hover:bg-blue-700 px-3 flex-shrink-0"
             disabled={status === "loading"}
           >
@@ -83,18 +83,17 @@ export function NewsletterSignup({
         </div>
 
         {status !== "idle" && (
-          <div className={`flex items-center gap-2 text-sm ${
-            status === "success" ? "text-green-400" : 
-            status === "error" ? "text-red-400" : 
-            textColor
-          }`}>
+          <div className={`flex items-center gap-2 text-sm ${status === "success" ? "text-green-400" :
+            status === "error" ? "text-red-400" :
+              textColor
+            }`}>
             {status === "success" && <CheckCircle className="w-4 h-4" />}
             {status === "error" && <AlertCircle className="w-4 h-4" />}
             <span>{message}</span>
           </div>
         )}
       </form>
-      
+
       {variant !== "footer" && (
         <p className="text-xs text-gray-500 mt-3">
           No spam, unsubscribe at any time. Read our{" "}

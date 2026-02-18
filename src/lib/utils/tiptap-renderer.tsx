@@ -8,17 +8,20 @@ export interface TipTapNode {
   type: string;
   text?: string;
   content?: TipTapNode[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   attrs?: Record<string, any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   marks?: Array<{ type: string; attrs?: Record<string, any> }>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const renderTipTapContent = (content: any): string => {
   if (!content) return '<p>No content available</p>';
 
   const renderNode = (node: TipTapNode): string => {
     if (node.type === 'text') {
       let text = node.text || '';
-      
+
       if (node.marks) {
         node.marks.forEach((mark) => {
           switch (mark.type) {
@@ -80,7 +83,7 @@ export const renderTipTapContent = (content: any): string => {
 
     if (node.content) {
       const contentText = node.content.map(renderNode).join('');
-      
+
       switch (node.type) {
         case 'paragraph':
           return `<p>${contentText}</p>`;
@@ -127,12 +130,12 @@ export const renderTipTapContent = (content: any): string => {
     if (content.type === 'doc' && content.content) {
       return content.content.map(renderNode).join('');
     }
-    
+
     // Handle single node or array
     if (Array.isArray(content)) {
       return content.map(renderNode).join('');
     }
-    
+
     return renderNode(content);
   } catch (error) {
     console.error('Error rendering TipTap content:', error);
@@ -144,16 +147,17 @@ export const renderTipTapContent = (content: any): string => {
  * React component wrapper for TipTap content
  */
 interface TipTapContentProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
   className?: string;
 }
 
 export const TipTapContent: React.FC<TipTapContentProps> = ({ content, className = "" }) => {
   const htmlContent = renderTipTapContent(content);
-  
+
   return (
-    <div 
-      dangerouslySetInnerHTML={{ __html: htmlContent }} 
+    <div
+      dangerouslySetInnerHTML={{ __html: htmlContent }}
       className={`post-content ${className}`}
     />
   );

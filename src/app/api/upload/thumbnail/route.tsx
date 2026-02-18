@@ -45,11 +45,12 @@ export async function POST(req: NextRequest) {
     // Return the public URL
     const publicUrl = `/uploads/post-thumbnails/${fileName}`;
     return NextResponse.json({ url: publicUrl }, { status: 200 });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as { code?: string };
     console.error("Upload error:", err);
 
     // Known errors
-    if (err.code === "ENOENT") {
+    if (error.code === "ENOENT") {
       return NextResponse.json(
         { error: "Directory not found" },
         { status: 500 }

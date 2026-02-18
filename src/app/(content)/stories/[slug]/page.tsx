@@ -2,46 +2,46 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
-import Image from "next/image";
+
 import { useParams } from "next/navigation";
-import { User, Tag, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { TipTapContent } from "@/lib/utils/tiptap-renderer";
 import { StoryHero } from "@/components/content/story-hero";
-import { calculateReadingTime } from "@/lib/utils";
+
 import type { Post } from "@/types";
 
 // Local storage utility functions
 const getFromLocalStorage = (key: string, ttlMinutes: number = 5) => {
   if (typeof window === 'undefined') return null;
-  
+
   try {
     const item = localStorage.getItem(key);
     if (!item) return null;
-    
+
     const parsed = JSON.parse(item);
     const now = new Date().getTime();
     const expiry = parsed.timestamp + (ttlMinutes * 60 * 1000);
-    
+
     if (now > expiry) {
       localStorage.removeItem(key);
       return null;
     }
-    
+
     return parsed.data;
-  } catch (error) {
+  } catch {
     localStorage.removeItem(key);
     return null;
   }
 };
 
-const setInLocalStorage = (key: string, data: any) => {
+const setInLocalStorage = (key: string, data: unknown) => {
   if (typeof window === 'undefined') return;
-  
+
   try {
     const item = {
       data,
@@ -61,24 +61,24 @@ const usePublishedPost = (slug: string) => {
       // Check local storage first
       const cacheKey = `post_${slug}`;
       const cachedPost = getFromLocalStorage(cacheKey);
-      
+
       if (cachedPost) {
         console.log('Using cached post data');
         return cachedPost;
       }
-      
+
       // Fetch from API if not in cache or expired
       const { data } = await axios.get(`/api/posts/${slug}`);
-      
+
       // Only return if published
       if (data.status !== "published") {
         throw new Error("Story not found or not published");
       }
-      
+
       // Store in local storage for 5 minutes
       setInLocalStorage(cacheKey, data);
       console.log('Post data cached locally');
-      
+
       return data;
     },
     retry: 1,
@@ -114,12 +114,12 @@ function StoryLoading() {
             </div>
           </div>
         </div>
-        
+
         {/* Featured image skeleton */}
         <div className="max-w-4xl mx-auto px-6 -mt-8">
           <Skeleton className="w-full aspect-[21/9] rounded-lg" />
         </div>
-        
+
         {/* Content skeleton */}
         <div className="space-y-6">
           <div className="flex gap-2">
@@ -238,7 +238,7 @@ export default function PostDetailPage() {
             Enjoyed This Story?
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Subscribe to get the latest drone insights, UAV reviews, and aviation stories 
+            Subscribe to get the latest drone insights, UAV reviews, and aviation stories
             delivered directly to your inbox.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

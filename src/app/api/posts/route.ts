@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     where: { id: { in: ids } },
     select: { id: true },
   });
-  const existingIds = new Set(existing.map(c => c.id));
+  const existingIds = new Set(existing.map((c: { id: string }) => c.id));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const postData: any = {
@@ -62,8 +62,8 @@ export async function POST(req: Request) {
     // ✅ Explicit M2M: create PostCategory rows & connect the Category
     categories: {
       create: ids
-        .filter(id => existingIds.has(id))
-        .map(id => ({ category: { connect: { id } } })),
+        .filter((id: string) => existingIds.has(id))
+        .map((id: string) => ({ category: { connect: { id } } })),
     },
     publishedAt: status === "published" ? new Date() : null,
     draftedAt: status === "draft" ? new Date() : null,
@@ -80,7 +80,8 @@ export async function POST(req: Request) {
   // Flatten categories like your GET
   return NextResponse.json({
     ...newPost,
-    categories: newPost.categories.map(c => c.category),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    categories: newPost.categories.map((c: any) => c.category),
   });
 }
 

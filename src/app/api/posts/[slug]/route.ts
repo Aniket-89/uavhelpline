@@ -20,7 +20,8 @@ export async function GET(
 
   return NextResponse.json({
     ...post,
-    categories: post.categories.map((c) => c.category),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    categories: post.categories.map((c: any) => c.category),
   });
 }
 
@@ -114,7 +115,8 @@ export async function PUT(
 
     return NextResponse.json({
       ...updated,
-      categories: updated.categories.map((c) => c.category),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      categories: updated.categories.map((c: any) => c.category),
     });
   } catch (error) {
     console.error("Error updating post:", error);

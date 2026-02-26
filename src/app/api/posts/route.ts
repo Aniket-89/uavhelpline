@@ -2,12 +2,14 @@ export const runtime = 'nodejs'; // ensure NOT Edge Runtime
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../lib/db/index";
 
-// GET posts with optional filtering
-// Query params: ?status=published&category=blogs
+// GET posts with optional filtering and pagination
+// Query params: ?status=published&category=blogs&page=1&limit=12
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const status = searchParams.get("status");
   const categorySlug = searchParams.get("category");
+  const page = parseInt(searchParams.get("page") || "0", 10);
+  const limit = Math.min(parseInt(searchParams.get("limit") || "0", 10), 100);
 
   // Build where clause based on query params
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,24 +23,39 @@ export async function GET(req: NextRequest) {
     };
   }
 
-  const posts = await prisma.post.findMany({
-    where,
-    include: {
-      categories: {
-        include: { category: true },
-      },
-    },
-    orderBy: { publishedAt: "desc" },
-  });
+  // If page and limit are provided, use server-side pagination
+  const usePagination = page > 0 && limit > 0;
 
-  const response = NextResponse.json(
+  const [posts, total] = await Promise.all([
+    prisma.post.findMany({
+      where,
+      include: {
+        categories: {
+          include: { category: true },
+        },
+      },
+      orderBy: { publishedAt: "desc" },
+      ...(usePagination && {
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    }),
+    usePagination ? prisma.post.count({ where }) : Promise.resolve(0),
+  ]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const flattenedPosts = posts.map((post: any) => ({
+    ...post,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    posts.map((post: any) => ({
-      ...post,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      categories: post.categories.map((c: any) => c.category),
-    }))
-  );
+    categories: post.categories.map((c: any) => c.category),
+  }));
+
+  // Return paginated response when pagination params are present
+  const body = usePagination
+    ? { posts: flattenedPosts, total, page, limit, totalPages: Math.ceil(total / limit) }
+    : flattenedPosts;
+
+  const response = NextResponse.json(body);
 
   // Cache for 60 minutes (3600 seconds)
   response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=3600');

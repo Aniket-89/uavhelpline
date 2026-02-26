@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PostStatus } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function CreatePost() {
     const router = useRouter();
@@ -250,18 +251,20 @@ export default function CreatePost() {
                                 className="file:mr-4 file:py-2 file:px-4 file:rounded-xs file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
                             />
                             {thumbnailPreview && (
-                                <div className="relative">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
+                                <div className="relative w-full max-w-md h-48">
+                                    <Image
                                         src={thumbnailPreview}
                                         alt="Thumbnail preview"
-                                        className="w-full max-w-md h-48 object-cover rounded-xs border"
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 400px"
+                                        className="object-cover rounded-xs border"
+                                        unoptimized
                                     />
                                     <Button
                                         type="button"
                                         variant="destructive"
                                         size="sm"
-                                        className="absolute top-2 right-2"
+                                        className="absolute top-2 right-2 z-10"
                                         onClick={() => {
                                             setThumbnail(null);
                                             setThumbnailPreview("");

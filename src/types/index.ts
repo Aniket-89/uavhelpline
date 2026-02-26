@@ -33,6 +33,15 @@ export interface PostCategory {
   categoryId: string;
 }
 
+// Paginated response from API
+export interface PaginatedPosts {
+  posts: Post[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 // Comment
 export interface Comment {
   id: string;

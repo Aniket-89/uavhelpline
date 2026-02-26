@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import axios from "axios";
-import { Post } from "@/types";
+import { Post, PaginatedPosts } from "@/types";
 
 export const usePosts = () =>
   useQuery<Post[]>({
@@ -98,6 +98,24 @@ export const usePublishedPosts = () => {
       const { data } = await axios.get("/api/posts?status=published");
       return data;
     },
+  });
+};
+
+// Hook for server-side paginated published posts
+export const usePaginatedPosts = (page: number, limit: number, category?: string) => {
+  return useQuery<PaginatedPosts>({
+    queryKey: ["paginated-posts", page, limit, category],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        status: "published",
+        page: String(page),
+        limit: String(limit),
+      });
+      if (category && category !== "all") params.set("category", category);
+      const { data } = await axios.get(`/api/posts?${params}`);
+      return data;
+    },
+    placeholderData: keepPreviousData,
   });
 };
 

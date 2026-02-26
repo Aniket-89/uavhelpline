@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-import { usePublishedPosts } from "@/hooks/usePosts";
+import { usePaginatedPosts } from "@/hooks/usePosts";
 import { useCategories } from "@/hooks/useCategories";
 import { StoryCard } from "@/components/content/story-card";
 import { StoriesLoading } from "@/components/content/stories-loading";
@@ -14,32 +14,31 @@ import { CTASection } from "@/components/content/cta-section";
 
 
 export default function StoriesListPage() {
-  const { data: posts = [], isLoading, error } = usePublishedPosts();
-  const { data: categories = [] } = useCategories();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 12;
 
-  // Filter and search posts
+  const { data: categories = [] } = useCategories();
+  const { data: paginatedData, isLoading, error } = usePaginatedPosts(
+    currentPage,
+    postsPerPage,
+    selectedCategory !== "all" ? selectedCategory : undefined
+  );
+
+  const posts = paginatedData?.posts ?? [];
+  const totalPages = paginatedData?.totalPages ?? 0;
+  const total = paginatedData?.total ?? 0;
+
+  // Client-side search filter (search is lightweight, keep client-side)
   const filteredPosts = useMemo(() => {
-    return posts.filter(post => {
-      const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.author.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesCategory = selectedCategory === "all" ||
-        post.categories?.some(cat => cat.id === selectedCategory);
-
-      return matchesSearch && matchesCategory;
-    });
-  }, [posts, searchTerm, selectedCategory]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-  const startIndex = (currentPage - 1) * postsPerPage;
-  const paginatedPosts = filteredPosts.slice(startIndex, startIndex + postsPerPage);
+    if (!searchTerm) return posts;
+    return posts.filter(post =>
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [posts, searchTerm]);
 
   if (error) {
     return (
@@ -97,14 +96,13 @@ export default function StoriesListPage() {
                 {searchTerm || selectedCategory !== "all" ? "Search Results" : "Latest Stories"}
               </h2>
               <p className="text-muted-foreground mt-1">
-                {filteredPosts.length} {filteredPosts.length === 1 ? 'story' : 'stories'} found
-                {searchTerm && ` for "${searchTerm}"`}
+                {searchTerm ? `${filteredPosts.length} ${filteredPosts.length === 1 ? 'story' : 'stories'} found for "${searchTerm}"` : `${total} ${total === 1 ? 'story' : 'stories'} found`}
               </p>
             </div>
 
-            {filteredPosts.length > 0 && (
+            {total > 0 && (
               <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1}-{Math.min(startIndex + postsPerPage, filteredPosts.length)} of {filteredPosts.length}
+                Page {currentPage} of {totalPages}
               </div>
             )}
           </div>
@@ -141,7 +139,7 @@ export default function StoriesListPage() {
                 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
                 : "space-y-6"
               }>
-                {paginatedPosts.map((post) => (
+                {filteredPosts.map((post) => (
                   <StoryCard key={post.id} post={post} />
                 ))}
               </div>

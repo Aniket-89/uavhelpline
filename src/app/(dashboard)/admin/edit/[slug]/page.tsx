@@ -41,6 +41,7 @@ import {
   Settings
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import type { PostStatus } from "@/types";
 
 export default function EditPost() {
@@ -428,11 +429,13 @@ export default function EditPost() {
               {/* Featured Image */}
 
               <div className="aspect-video relative overflow-hidden rounded-xs">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={post.thumbnail || "/placeholder-640x480.png"}
                   alt={post.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 75vw"
+                  className="object-cover"
+                  priority
                 />
               </div>
 
@@ -495,30 +498,33 @@ export default function EditPost() {
 
                 {/* Preview (new upload OR existing) */}
                 {(thumbnailPreview || existingThumbnail) ? (
-                  <div className="relative">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                  <div className="relative w-11/12 mx-auto max-w-md aspect-video">
+                    <Image
                       src={thumbnailPreview || existingThumbnail}
                       alt="Thumbnail preview"
-                      className="w-11/12 mx-auto max-w-md aspect-video object-cover rounded-xs border"
+                      fill
+                      sizes="(max-width: 768px) 90vw, 400px"
+                      className="object-cover rounded-xs border"
+                      unoptimized={thumbnailPreview?.startsWith("data:")}
                     />
                     <Button
                       type="button"
                       variant="destructive"
                       size="sm"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 right-2 z-10"
                       onClick={handleRemoveThumbnail}
                     >
                       Remove
                     </Button>
                   </div>
                 ) : (
-                  <div className="relative w-full max-w-md">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                  <div className="relative w-full max-w-md aspect-video">
+                    <Image
                       src="/placeholder-640x480.png"
                       alt="Placeholder"
-                      className="w-full aspect-video object-cover rounded-xs border"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      className="object-cover rounded-xs border"
                     />
                   </div>
                 )}

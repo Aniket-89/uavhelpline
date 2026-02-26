@@ -34,14 +34,21 @@ export async function PUT(
     const { slug } = await params;
     const body = await req.json();
 
+    // Validate input
+    const { UpdatePostSchema } = await import("../../../../../lib/validations/post");
+    const parsed = UpdatePostSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ errors: parsed.error.issues }, { status: 400 });
+    }
+
     const {
       title,
       status,
       content,
       author,
-      thumbnail,       // may be string URL, base64, or empty string to clear
-      categoryIds = [],// array of category ids
-    } = body ?? {};
+      thumbnail,
+      categoryIds = [],
+    } = parsed.data;
 
     // 1) Check exist
     const existing = await prisma.post.findUnique({
@@ -61,13 +68,21 @@ export async function PUT(
       const base = generateSlug(title);
       newSlug = base;
 
-      // Ensure uniqueness if collision
-      let suffix = 1;
-      // Only collide if the slug belongs to another post id
-      while (true) {
-        const found = await prisma.post.findUnique({ where: { slug: newSlug } });
-        if (!found || found.id === existing.id) break;
-        newSlug = `${base}-${suffix++}`;
+      // Find all existing slugs that start with this base in a single query
+      const conflicting = await prisma.post.findMany({
+        where: {
+          slug: { startsWith: base },
+          id: { not: existing.id },
+        },
+        select: { slug: true },
+      });
+      const conflictingSlugs = new Set(conflicting.map((p) => p.slug));
+
+      // Pick the first available slug
+      if (conflictingSlugs.has(newSlug)) {
+        let suffix = 1;
+        while (conflictingSlugs.has(`${base}-${suffix}`)) suffix++;
+        newSlug = `${base}-${suffix}`;
       }
     }
 

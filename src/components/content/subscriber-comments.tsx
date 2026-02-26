@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -48,17 +49,10 @@ const commentSlides: CommentSlide[] = [
 ];
 
 export function SubscriberComments() {
+  const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [lastInteraction, setLastInteraction] = useState(Date.now());
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % commentSlides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + commentSlides.length) % commentSlides.length);
-  };
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
@@ -111,13 +105,10 @@ export function SubscriberComments() {
           </div>
 
           {/* View in Story Button */}
-          <Button 
-            variant="secondary" 
+          <Button
+            variant="secondary"
             className="w-full bg-transparent"
-            onClick={() => {
-              // In a real app, this would navigate to the story
-              console.log(`Navigate to story: ${currentComment.storySlug}`);
-            }}
+            onClick={() => router.push(`/stories/${currentComment.storySlug}`)}
           >
             View in Story
           </Button>
@@ -138,25 +129,6 @@ export function SubscriberComments() {
         </div>
       </Card>
 
-      {/* Navigation Controls (Hidden on mobile, can be used for testing) */}
-      <div className="hidden mt-4 flex justify-center space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={prevSlide}
-          className="px-3"
-        >
-          ←
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={nextSlide}
-          className="px-3"
-        >
-          →
-        </Button>
-      </div>
     </div>
   );
 }

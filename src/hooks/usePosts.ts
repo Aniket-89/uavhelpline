@@ -95,9 +95,8 @@ export const usePublishedPosts = () => {
   return useQuery<Post[]>({
     queryKey: ["published-posts"],
     queryFn: async () => {
-      const { data } = await axios.get("/api/posts");
-      // Filter only published posts for public view
-      return data.filter((post: Post) => post.status === "published");
+      const { data } = await axios.get("/api/posts?status=published");
+      return data;
     },
   });
 };
@@ -107,12 +106,8 @@ export const usePublishedBlogPosts = () => {
   return useQuery<Post[]>({
     queryKey: ["published-blog-posts"],
     queryFn: async () => {
-      const { data } = await axios.get("/api/posts");
-      // Filter only published posts with "blogs" category
-      return data.filter((post: Post) => 
-        post.status === "published" && 
-        post.categories?.some(cat => cat.slug === "blogs")
-      );
+      const { data } = await axios.get("/api/posts?status=published&category=blogs");
+      return data;
     },
   });
 };

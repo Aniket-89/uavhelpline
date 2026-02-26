@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from "fs/promises";
+import { mkdirSync, existsSync } from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
@@ -31,13 +32,9 @@ export async function POST(req: NextRequest) {
     // Generate unique file name
     const fileExt = file.name.split(".").pop();
     const fileName = `${uuidv4()}.${fileExt}`;
-    const filePath = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      "post-thumbnails",
-      fileName
-    );
+    const uploadDir = path.join(process.cwd(), "public", "uploads", "post-thumbnails");
+    if (!existsSync(uploadDir)) mkdirSync(uploadDir, { recursive: true });
+    const filePath = path.join(uploadDir, fileName);
 
     // Save file to disk
     await writeFile(filePath, buffer);

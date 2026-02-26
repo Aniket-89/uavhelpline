@@ -1,5 +1,4 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
 
@@ -12,80 +11,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { TipTapContent } from "@/lib/utils/tiptap-renderer";
 import { StoryHero } from "@/components/content/story-hero";
+import { usePost } from "@/hooks/usePosts";
 
 import type { Post } from "@/types";
-
-// Local storage utility functions
-const getFromLocalStorage = (key: string, ttlMinutes: number = 5) => {
-  if (typeof window === 'undefined') return null;
-
-  try {
-    const item = localStorage.getItem(key);
-    if (!item) return null;
-
-    const parsed = JSON.parse(item);
-    const now = new Date().getTime();
-    const expiry = parsed.timestamp + (ttlMinutes * 60 * 1000);
-
-    if (now > expiry) {
-      localStorage.removeItem(key);
-      return null;
-    }
-
-    return parsed.data;
-  } catch {
-    localStorage.removeItem(key);
-    return null;
-  }
-};
-
-const setInLocalStorage = (key: string, data: unknown) => {
-  if (typeof window === 'undefined') return;
-
-  try {
-    const item = {
-      data,
-      timestamp: new Date().getTime()
-    };
-    localStorage.setItem(key, JSON.stringify(item));
-  } catch (error) {
-    console.warn('Failed to save to localStorage:', error);
-  }
-};
-
-// Fetch single published post with local storage caching
-const usePublishedPost = (slug: string) => {
-  return useQuery<Post>({
-    queryKey: ["published-post", slug],
-    queryFn: async () => {
-      // Check local storage first
-      const cacheKey = `post_${slug}`;
-      const cachedPost = getFromLocalStorage(cacheKey);
-
-      if (cachedPost) {
-        console.log('Using cached post data');
-        return cachedPost;
-      }
-
-      // Fetch from API if not in cache or expired
-      const { data } = await axios.get(`/api/posts/${slug}`);
-
-      // Only return if published
-      if (data.status !== "published") {
-        throw new Error("Story not found or not published");
-      }
-
-      // Store in local storage for 5 minutes
-      setInLocalStorage(cacheKey, data);
-      console.log('Post data cached locally');
-
-      return data;
-    },
-    retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 5 * 60 * 1000, // 5 minutes
-  });
-};
 
 function StoryLoading() {
   return (
@@ -148,7 +76,7 @@ function StoryLoading() {
 
 export default function PostDetailPage() {
   const { slug } = useParams();
-  const { data: post, isLoading, error } = usePublishedPost(slug as string);
+  const { data: post, isLoading, error } = usePost(slug as string);
 
 
 

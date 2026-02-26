@@ -1,11 +1,28 @@
 export const runtime = 'nodejs'; // ensure NOT Edge Runtime
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../lib/db/index";
-// import { authUser } from "@/lib/auth"; // custom middleware if needed
 
-// GET all posts
-export async function GET() {
+// GET posts with optional filtering
+// Query params: ?status=published&category=blogs
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const status = searchParams.get("status");
+  const categorySlug = searchParams.get("category");
+
+  // Build where clause based on query params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: any = {};
+  if (status === "published" || status === "draft") {
+    where.status = status;
+  }
+  if (categorySlug) {
+    where.categories = {
+      some: { category: { slug: categorySlug } },
+    };
+  }
+
   const posts = await prisma.post.findMany({
+    where,
     include: {
       categories: {
         include: { category: true },
@@ -32,7 +49,15 @@ export async function GET() {
 // POST new post
 export async function POST(req: Request) {
   const body = await req.json();
-  const { title, slug, status, content, author, thumbnail, categoryIds = [] } = body;
+
+  // Validate input
+  const { CreatePostSchema } = await import("../../../../lib/validations/post");
+  const parsed = CreatePostSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ errors: parsed.error.issues }, { status: 400 });
+  }
+
+  const { title, slug, status, content, author, thumbnail, categoryIds = [] } = parsed.data;
 
   // TipTap parsing
   const { generateJSON } = await import("@tiptap/html");

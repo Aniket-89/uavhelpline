@@ -66,7 +66,7 @@ export default function EditPost() {
   const [isPublishing, setIsPublishing] = useState(false);
 
   // Thumbnail state
-  const [, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
   const [existingThumbnail, setExistingThumbnail] = useState<string>("");
 
@@ -135,8 +135,23 @@ export default function EditPost() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // If you have an upload API, upload thumbnailFile and set thumbnailToSave = returned URL
-      const thumbnailToSave = thumbnailPreview || existingThumbnail || "";
+      let thumbnailToSave = existingThumbnail || "";
+
+      // Upload new thumbnail file if one was selected
+      if (thumbnailFile) {
+        const formData = new FormData();
+        formData.append("file", thumbnailFile);
+
+        const uploadResponse = await fetch("/api/upload/thumbnail", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (uploadResponse.ok) {
+          const uploadResult = await uploadResponse.json();
+          thumbnailToSave = uploadResult.url;
+        }
+      }
 
       const postData = {
         title: title.trim(),
@@ -145,7 +160,7 @@ export default function EditPost() {
         content,
         author,
         categoryIds: selectedCategories,
-        thumbnail: thumbnailToSave, // <-- important
+        thumbnail: thumbnailToSave,
       };
 
       await updatePost.mutateAsync({ slug: slug as string, postData });

@@ -1,7 +1,6 @@
 import Header from "@/components/content/header";
 import Footer from "@/components/content/footer";
 import { LayoutWrapper } from "@/components/content/layout-wrapper";
-import { QueryProvider } from "@/providers/query-provider";
 
 export default function ContentLayout({
   children,
@@ -9,7 +8,7 @@ export default function ContentLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <QueryProvider>
+    <>
       <Header />
       <LayoutWrapper>
 
@@ -17,6 +16,6 @@ export default function ContentLayout({
 
       </LayoutWrapper>
       <Footer />
-    </QueryProvider>
+    </>
   );
 }

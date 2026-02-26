@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tansta
 import axios from "axios";
 import { Post, PaginatedPosts } from "@/types";
 
+// Admin hook — no staleTime override, uses the 2min default from QueryClient.
+// Mutations already invalidate this query, so admin always sees fresh data after edits.
 export const usePosts = () =>
   useQuery<Post[]>({
     queryKey: ["posts"],
@@ -19,6 +21,7 @@ export const usePost = (slug: string) =>
       return data;
     },
     enabled: !!slug,
+    staleTime: 5 * 60 * 1000, // 5 minutes — individual posts rarely change
   });
 
 export const useCreatePost = () => {
@@ -116,6 +119,17 @@ export const usePaginatedPosts = (page: number, limit: number, category?: string
       return data;
     },
     placeholderData: keepPreviousData,
+  });
+};
+
+// Hook for published posts filtered by category slug
+export const usePublishedPostsByCategory = (categorySlug: string) => {
+  return useQuery<Post[]>({
+    queryKey: ["published-posts", categorySlug],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/posts?status=published&category=${categorySlug}`);
+      return data;
+    },
   });
 };
 

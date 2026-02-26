@@ -10,6 +10,7 @@ export const useComments = (postId: string) =>
       return data;
     },
     enabled: !!postId,
+    staleTime: 30 * 1000, // 30 seconds — comments should feel near-realtime
   });
 
 export const useAddComment = () => {

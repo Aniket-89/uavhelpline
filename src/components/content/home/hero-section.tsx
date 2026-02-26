@@ -1,5 +1,5 @@
 "use client";
-import { usePublishedPosts } from "@/hooks/usePosts";
+import { usePublishedPostsByCategory } from "@/hooks/usePosts";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Post } from "@/types";
@@ -80,7 +80,7 @@ function HeroLoading() {
 }
 
 export function HeroSection() {
-  const { data: allPosts = [], isLoading, error } = usePublishedPosts();
+  const { data: allPosts = [], isLoading, error } = usePublishedPostsByCategory("news");
 
   // Sort by date and get latest posts
   const posts = allPosts

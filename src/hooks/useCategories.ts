@@ -9,6 +9,7 @@ export const useCategories = () =>
       const { data } = await axios.get("/api/categories");
       return data;
     },
+    staleTime: 30 * 60 * 1000, // 30 minutes — categories rarely change
   });
 
 export const useCreateCategory = () => {

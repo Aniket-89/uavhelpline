@@ -55,12 +55,7 @@ export async function GET(req: NextRequest) {
     ? { posts: flattenedPosts, total, page, limit, totalPages: Math.ceil(total / limit) }
     : flattenedPosts;
 
-  const response = NextResponse.json(body);
-
-  // Cache for 60 minutes (3600 seconds)
-  response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=3600');
-
-  return response;
+  return NextResponse.json(body);
 }
 
 // POST new post

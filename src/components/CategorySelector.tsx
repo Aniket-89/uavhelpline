@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useCategories, useCreateCategory } from "@/hooks/useCategories";
 import { Plus, X, Tag, Loader2, Search } from "lucide-react";
+import { toast } from "sonner";
 
 
 interface CategorySelectorProps {
@@ -52,7 +53,7 @@ export default function CategorySelector({
     // Prevent duplicate (client-side)
     const exists = categories.find((c) => norm(c.name) === norm(name));
     if (exists) {
-      alert(`Category "${exists.name}" already exists.`);
+      toast.warning(`Category "${exists.name}" already exists.`);
       return;
     }
 
@@ -62,13 +63,13 @@ export default function CategorySelector({
       onCategoryToggle(created.id); // auto-select
       setNewCategoryName("");
       setShowCreateForm(false);
-      alert(`Category "${created.name}" created.`);
+      toast.success(`Category "${created.name}" created.`);
     } catch (e: unknown) {
       console.error(e);
       if ((e as { response?: { data?: { error?: string } } })?.response?.data?.error?.includes("already exists")) {
-        alert("This category already exists.");
+        toast.warning("This category already exists.");
       } else {
-        alert("Failed to create category. Please try again.");
+        toast.error("Failed to create category. Please try again.");
       }
     } finally {
       setIsCreating(false);

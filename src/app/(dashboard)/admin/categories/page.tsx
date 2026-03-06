@@ -6,15 +6,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusCircle, Tags } from "lucide-react";
+import { PlusCircle, Tags, Pencil, Trash2, Check, X } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { useUpdateCategory, useDeleteCategory } from "@/hooks/useCategories";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function CategoriesPage() {
   const { data: categories = [], isLoading } = useCategories();
   const createCategory = useCreateCategory();
+  const updateCategory = useUpdateCategory();
+  const deleteCategory = useDeleteCategory();
 
   const [newName, setNewName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +42,33 @@ export default function CategoriesPage() {
       setNewName("");
       setIsAdding(false);
     } catch {
-      alert("Failed to create category. It may already exist.");
+      toast.error("Failed to create category. It may already exist.");
+    }
+  };
+
+  const handleStartEdit = (id: string, name: string) => {
+    setEditingId(id);
+    setEditName(name);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingId || !editName.trim()) return;
+    try {
+      await updateCategory.mutateAsync({ id: editingId, name: editName.trim() });
+      toast.success("Category renamed.");
+      setEditingId(null);
+      setEditName("");
+    } catch {
+      toast.error("Failed to update category.");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteCategory.mutateAsync(id);
+      toast.success("Category deleted.");
+    } catch {
+      toast.error("Failed to delete category.");
     }
   };
 
@@ -97,11 +140,83 @@ export default function CategoriesPage() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (
             <Card key={category.id} className="transition-colors hover:bg-accent/50">
-              <CardHeader className="flex flex-row items-center justify-between py-4">
-                <CardTitle className="text-sm font-medium">{category.name}</CardTitle>
-                <Badge variant="outline" className="text-xs font-mono">
-                  {category.slug}
-                </Badge>
+              <CardHeader className="flex flex-row items-center justify-between py-4 gap-2">
+                {editingId === category.id ? (
+                  <div className="flex items-center gap-2 flex-1">
+                    <Input
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSaveEdit();
+                        if (e.key === "Escape") setEditingId(null);
+                      }}
+                      className="h-8 text-sm flex-1"
+                      autoFocus
+                    />
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7"
+                      onClick={handleSaveEdit}
+                      disabled={updateCategory.isPending}
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7"
+                      onClick={() => setEditingId(null)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <CardTitle className="text-sm font-medium">{category.name}</CardTitle>
+                    <div className="flex items-center gap-1">
+                      <Badge variant="outline" className="text-xs font-mono">
+                        {category.slug}
+                      </Badge>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7"
+                        onClick={() => handleStartEdit(category.id, category.name)}
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-7 w-7 text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Category</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete &ldquo;{category.name}&rdquo;? Posts using this category will be unlinked.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDelete(category.id)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </>
+                )}
               </CardHeader>
             </Card>
           ))}

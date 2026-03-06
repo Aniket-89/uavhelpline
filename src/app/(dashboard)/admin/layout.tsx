@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
+import { Toaster } from "sonner"
 
 export default async function DashboardLayout({children,}: {children: React.ReactNode}) {
     return (
@@ -16,6 +17,7 @@ export default async function DashboardLayout({children,}: {children: React.Reac
                     {children}
                 </main>
             </SidebarInset>
+            <Toaster richColors position="bottom-right" />
         </SidebarProvider>
     )
 }

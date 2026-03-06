@@ -9,6 +9,17 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import {
   DropdownMenu,
@@ -32,6 +43,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useUpdatePostStatus, useDeletePost } from "@/hooks/usePosts";
+import { toast } from "sonner";
 
 interface PostCardProps {
   post: Post;
@@ -75,14 +87,12 @@ export default function PostCard({ post }: PostCardProps) {
   };
 
   const handleDelete = async () => {
-    if (!confirm(`Are you sure you want to delete "${post.title}"?`)) return;
-
     setIsDeleting(true);
     try {
       await deletePost.mutateAsync(post.slug);
     } catch (error) {
       console.error("Error deleting post:", error);
-      alert("Failed to delete post. Please try again.");
+      toast.error("Failed to delete post. Please try again.");
     } finally {
       setIsDeleting(false);
     }
@@ -98,7 +108,7 @@ export default function PostCard({ post }: PostCardProps) {
       });
     } catch (error) {
       console.error("Error updating post status:", error);
-      alert("Failed to update post status. Please try again.");
+      toast.error("Failed to update post status. Please try again.");
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -169,14 +179,32 @@ export default function PostCard({ post }: PostCardProps) {
                   }
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                  className="text-destructive focus:text-destructive"
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  {isDeleting ? "Deleting..." : "Delete"}
-                </DropdownMenuItem>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      disabled={isDeleting}
+                      className="text-destructive focus:text-destructive"
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      {isDeleting ? "Deleting..." : "Delete"}
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Post</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete &ldquo;{post.title}&rdquo;? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -227,8 +255,8 @@ export default function PostCard({ post }: PostCardProps) {
             </Avatar>
             <span className="font-medium">{post.author}</span>
           </div>
-          
-          
+
+
         </div> */}
       </CardContent>
 

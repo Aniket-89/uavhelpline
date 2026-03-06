@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "File too large" }, { status: 413 });
     }
 
-    if (!["image/jpeg", "image/png"].includes(file.type)) {
+    if (!["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml", "image/avif"].includes(file.type)) {
       return NextResponse.json(
         { error: "Unsupported file type" },
         { status: 415 }

@@ -9,12 +9,13 @@ import { Input } from "@/components/ui/input";
 import { PostStatus } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
+import { toast } from "sonner";
 
 export default function CreatePost() {
     const router = useRouter();
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
-    const [status] = useState<PostStatus>("draft");
+    const [status, setStatus] = useState<PostStatus>("draft");
     const [content, setContent] = useState(null);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [author, setAuthor] = useState("Admin"); // Default author
@@ -53,7 +54,7 @@ export default function CreatePost() {
                 };
                 reader.readAsDataURL(file);
             } else {
-                alert('Please select an image file.');
+                toast.warning('Please select an image file.');
             }
         }
     };
@@ -62,7 +63,7 @@ export default function CreatePost() {
         e.preventDefault();
 
         if (!title.trim() || !content) {
-            alert("Please fill in title and content");
+            toast.warning("Please fill in title and content");
             return;
         }
 
@@ -98,11 +99,11 @@ export default function CreatePost() {
             };
 
             await createPost.mutateAsync(postData);
-            alert("Post created successfully!");
+            toast.success("Post created successfully!");
             router.push("/admin/posts");
         } catch (error) {
             console.error("Error creating post:", error);
-            alert("Failed to create post. Please try again.");
+            toast.error("Failed to create post. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
@@ -163,40 +164,36 @@ export default function CreatePost() {
                         />
                     </div>
 
-
-
-                    {/* Status
-                <div>
-                    <label className="block text-sm font-medium mb-2">
-                        Status *
-                    </label>
-                    <div className="flex gap-4">
-                        <label className="flex items-center">
-                            <input
-                                type="radio"
-                                name="status"
-                                value="draft"
-                                checked={status === "draft"}
-                                onChange={(e) => setStatus(e.target.value as PostStatus)}
-                                className="mr-2"
-                            />
-                            Draft
+                    {/* Status */}
+                    <div>
+                        <label className="block text-sm font-medium mb-2">
+                            Status *
                         </label>
-                        <label className="flex items-center">
-                            <input
-                                type="radio"
-                                name="status"
-                                value="published"
-                                checked={status === "published"}
-                                onChange={(e) => setStatus(e.target.value as PostStatus)}
-                                className="mr-2"
-                            />
-                            Published
-                        </label>
+                        <div className="flex gap-4">
+                            <label className="flex items-center">
+                                <input
+                                    type="radio"
+                                    name="status"
+                                    value="draft"
+                                    checked={status === "draft"}
+                                    onChange={(e) => setStatus(e.target.value as PostStatus)}
+                                    className="mr-2"
+                                />
+                                Draft
+                            </label>
+                            <label className="flex items-center">
+                                <input
+                                    type="radio"
+                                    name="status"
+                                    value="published"
+                                    checked={status === "published"}
+                                    onChange={(e) => setStatus(e.target.value as PostStatus)}
+                                    className="mr-2"
+                                />
+                                Published
+                            </label>
+                        </div>
                     </div>
-                </div> */}
-
-
 
                     {/* Content Editor */}
                     <div>

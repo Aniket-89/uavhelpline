@@ -43,6 +43,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import type { PostStatus } from "@/types";
+import { toast } from "sonner";
 
 export default function EditPost() {
   const { slug } = useParams();
@@ -107,11 +108,15 @@ export default function EditPost() {
     setEditSlug(post.slug);
     setStatus(post.status);
 
-    const parsed =
-      typeof post.content === "string" ? JSON.parse(post.content) : post.content;
-
-    // Fallback to a minimal empty doc if DB has null/undefined
     const defaultDoc = { type: "doc", content: [{ type: "paragraph" }] };
+    let parsed;
+    try {
+      parsed =
+        typeof post.content === "string" ? JSON.parse(post.content) : post.content;
+    } catch {
+      toast.error("Failed to parse post content. Using empty document.");
+      parsed = defaultDoc;
+    }
     setContent(parsed ?? defaultDoc);
 
     setSelectedCategories(post.categories?.map((c) => c.id) || []);
@@ -165,11 +170,11 @@ export default function EditPost() {
       };
 
       await updatePost.mutateAsync({ slug: slug as string, postData });
-      alert("Post saved successfully!");
+      toast.success("Post saved successfully!");
       if (editSlug !== slug) router.push(`/admin/edit/${editSlug}`);
     } catch (e) {
       console.error(e);
-      alert("Failed to save post. Please try again.");
+      toast.error("Failed to save post. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -180,11 +185,11 @@ export default function EditPost() {
   const handleDelete = async () => {
     try {
       await deletePost.mutateAsync(slug as string);
-      alert("Post deleted successfully!");
+      toast.success("Post deleted successfully!");
       router.push('/admin/posts');
     } catch (error) {
       console.error("Error deleting post:", error);
-      alert("Failed to delete post. Please try again.");
+      toast.error("Failed to delete post. Please try again.");
     }
   };
 
@@ -206,7 +211,7 @@ export default function EditPost() {
       });
     } catch (error) {
       console.error("Error updating post status:", error);
-      alert("Failed to update post status. Please try again.");
+      toast.error("Failed to update post status. Please try again.");
     } finally {
       setIsPublishing(false);
     }
@@ -247,8 +252,13 @@ export default function EditPost() {
     );
   }
   // Helper
-  const safeContent =
-    typeof post.content === "string" ? JSON.parse(post.content) : post.content;
+  let safeContent;
+  try {
+    safeContent =
+      typeof post.content === "string" ? JSON.parse(post.content) : post.content;
+  } catch {
+    safeContent = { type: "doc", content: [{ type: "paragraph" }] };
+  }
 
   return (
     <div className="container mx-auto px-6 py-8 max-w-8xl">
